@@ -1,0 +1,71 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
+const http = require("http.server");
+const enum_1 = require("./enum");
+const inject_ts_1 = require("inject.ts");
+const util_1 = require("./util");
+const controller_1 = require("./server/controller");
+class Server {
+    constructor(port = 3050) {
+        this.port = port;
+        this.map = {};
+        for (const i in enum_1.METHOD) {
+            this.map[enum_1.METHOD[i]] = [];
+        }
+        this.module = new inject_ts_1.Module([]);
+    }
+    instantiate(target, options) {
+        const m = this.module, a = m.instantiate(target, options), o = [];
+        m.instance.forEach((b) => {
+            if (a !== b) {
+                o.push(b);
+            }
+        });
+        m.instance = o;
+        return a;
+    }
+    route(req, res) {
+        const method = req.method().toLowerCase();
+        for (const i in this.map[method]) {
+            const m = req.url().match(this.map[method][i].reg);
+            if (m) {
+                const c = this.instantiate(this.map[method][i].class, { match: m, req, res });
+                return Promise.resolve().then(() => {
+                    return c[this.map[method][i].action]();
+                });
+            }
+        }
+    }
+    start() {
+        this.s = new http.Server(this.port);
+        this.alive = false;
+        return this.s.create((req, res) => {
+            if (!this.route(req, res)) {
+                return res.status((req.url() === '/') ? 2000 : 404).send('');
+            }
+        }).then(() => {
+            this.alive = true;
+        });
+    }
+    withController(list) {
+        for (const i in list) {
+            const base = Reflect.getMetadata(enum_1.METADATA.PATH, list[i]);
+            if (base) {
+                const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
+                for (const x in methods) {
+                    const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]);
+                    this.map[method].push({
+                        reg: util_1.default.path(base, url),
+                        class: list[i],
+                        action: methods[x]
+                    });
+                }
+            }
+        }
+        return this;
+    }
+}
+Server.Controller = controller_1.default;
+exports.default = Server;
+//# sourceMappingURL=server.js.map

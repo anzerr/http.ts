@@ -1,0 +1,31 @@
+{
+	"name": "http.ts",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/index.js",
+	"scripts": {
+		"example": "ts-node example.ts",
+		"build": "tsc -p ./",
+		"clean": "find ./src -regex \".*\\.\\(js\\|map\\|d\\.ts\\)\" -type f -delete && rm -Rf ./dist"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/node": "^11.13.4",
+		"eslint": "^5.16.0",
+		"eslint-config-basic": "git+http://git@github.com/anzerr/eslintrc.git",
+		"ts-node": "^8.1.0",
+		"tslint": "^5.15.0",
+		"tslint-config-airbnb": "^5.11.1",
+		"typescript": "^3.4.3"
+	},
+	"dependencies": {
+		"http.server": "git+https://git@github.com/anzerr/http.server.git",
+		"inject.ts": "git+https://git@github.com/anzerr/inject.ts.git",
+		"reflect-metadata": "^0.1.13"
+	},
+	"eslintConfig": {
+		"extends": "eslint-config-basic"
+	}
+}
