@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 export declare const METADATA: {
     PATH: string;
     METHOD: string;

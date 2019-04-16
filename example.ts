@@ -26,19 +26,24 @@ class Test extends Server.Controller {
 	@Get()
 	list() {
 		this.logger.info('list');
-		this.res.status(200).send('1');
+		return 'cat';
+	}
+
+	@Get('error')
+	error() {
+		throw new Error('cat');
 	}
 
 	@Get(':id')
 	getUser() {
 		this.logger.info('getUser');
-		this.res.status(200).send('2');
+		return this.status(200).send('2');
 	}
 
 	@Get(':id/friends')
 	getFriends() {
 		this.logger.info('getFriends');
-		this.res.status(200).send('3');
+		this.status(200).send('3');
 	}
 
 }

@@ -33,6 +33,12 @@ class Server {
                 const c = this.instantiate(this.map[method][i].class, { match: m, req, res });
                 return Promise.resolve().then(() => {
                     return c[this.map[method][i].action]();
+                }).then((r) => {
+                    if (res !== r && r) {
+                        return res.send(r);
+                    }
+                }).catch((e) => {
+                    return res.status(500).send(e.toString());
                 });
             }
         }
@@ -55,11 +61,13 @@ class Server {
                 const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
                 for (const x in methods) {
                     const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]);
-                    this.map[method].push({
-                        reg: util_1.default.path(base, url),
-                        class: list[i],
-                        action: methods[x]
-                    });
+                    if (url && method) {
+                        this.map[method].push({
+                            reg: util_1.default.path(base, url),
+                            class: list[i],
+                            action: methods[x]
+                        });
+                    }
                 }
             }
         }
