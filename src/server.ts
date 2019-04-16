@@ -5,6 +5,7 @@ import { METADATA, METHOD } from './enum';
 import {Module} from 'inject.ts';
 import util from './util';
 import Controller from './server/controller';
+import * as is from 'type.util';
 
 class Server {
 
@@ -41,12 +42,12 @@ class Server {
 		for (const i in this.map[method]) {
 			const m = req.url().match(this.map[method][i].reg);
 			if (m) {
-				const c = this.instantiate(this.map[method][i].class, {match: m, req, res});
+				const c = this.instantiate(this.map[method][i].class, {match: m, param: this.map[method][i].param, req, res});
 				return Promise.resolve().then(() => {
 					return c[this.map[method][i].action]();
 				}).then((r) => {
 					if (res !== r && r) {
-						return res.send(r);
+						return (is.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
 					}
 				}).catch((e) => {
 					return res.status(500).send(e.toString());
@@ -77,9 +78,10 @@ class Server {
 					const url = Reflect.getMetadata(METADATA.PATH, instance[methods[x]]),
 						method = Reflect.getMetadata(METADATA.METHOD, instance[methods[x]]);
 
-					if (url && method) {
+					if (is.defined(url) && is.defined(method)) {
 						this.map[method].push({
 							reg: util.path(base, url),
+							param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
 							class: list[i],
 							action: methods[x]
 						});

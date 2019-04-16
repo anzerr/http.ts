@@ -11,9 +11,10 @@ const createRequestMap = (method, path) => {
 };
 /* tslint:disable:variable-name */
 exports.Get = (path) => createRequestMap(enum_1.METHOD.GET, path);
+exports.Post = (path) => createRequestMap(enum_1.METHOD.POST, path);
 exports.Delete = (path) => createRequestMap(enum_1.METHOD.DELETE, path);
 exports.Put = (path) => createRequestMap(enum_1.METHOD.PUT, path);
-exports.Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
 exports.Options = (path) => createRequestMap(enum_1.METHOD.OPTIONS, path);
+exports.Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
 exports.All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
 //# sourceMappingURL=request.js.map

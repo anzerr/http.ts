@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import {Server, Controller, Get} from './index';
+import {Server, Controller, Get, Post} from './index';
 import {Injectable, Inject, Module} from 'inject.ts';
 
 @Injectable()
@@ -26,7 +26,15 @@ class Test extends Server.Controller {
 	@Get()
 	list() {
 		this.logger.info('list');
-		return 'cat';
+		return `cat_${this.query.name || ''}`;
+	}
+
+	@Post()
+	create() {
+		this.logger.info('create');
+		return this.data().then((res) => {
+			return res;
+		});
 	}
 
 	@Get('error')
@@ -37,7 +45,16 @@ class Test extends Server.Controller {
 	@Get(':id')
 	getUser() {
 		this.logger.info('getUser');
-		return this.status(200).send('2');
+		return {
+			id: this.param.id,
+			type: 'getUser'
+		};
+	}
+
+	@Get(':id/json')
+	getFriendsJson() {
+		this.logger.info('getFriendsJson');
+		this.status(200).json([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 	}
 
 	@Get(':id/friends')

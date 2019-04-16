@@ -23,7 +23,8 @@
 	"dependencies": {
 		"http.server": "git+https://git@github.com/anzerr/http.server.git",
 		"inject.ts": "git+https://git@github.com/anzerr/inject.ts.git",
-		"reflect-metadata": "^0.1.13"
+		"reflect-metadata": "^0.1.13",
+		"type.util": "git+https://git@github.com/anzerr/type.util.git"
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-basic"
