@@ -56,7 +56,7 @@ class Server {
 		}
 	}
 
-	start(): Promise<void> {
+	start(): Promise<Server> {
 		this.s = new http.Server(this.port);
 		this.alive = false;
 		return this.s.create((req, res) => {
