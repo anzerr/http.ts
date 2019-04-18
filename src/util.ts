@@ -4,7 +4,7 @@ import * as is from 'type.util';
 
 class Util {
 
-	getAllMethodNames(prototype: any) {
+	getAllMethodNames(prototype: any): any[] {
 		let out = [];
 		do {
 			out = out.concat(Object.getOwnPropertyNames(prototype).filter(prop => {
@@ -19,7 +19,7 @@ class Util {
 		return out;
 	}
 
-	path(...list: string[]) {
+	path(...list: string[]): RegExp {
 		let u = path.join(...list.filter((a) => (a)))
 			.replace(/\\+/g, '\\/')
 			.replace(/:\w+/g, '(\\w+)');

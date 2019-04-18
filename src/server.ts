@@ -26,7 +26,7 @@ class Server {
 		this.module = new Module([]);
 	}
 
-	instantiate(target: Object, options: Object) {
+	instantiate(target: Object, options: Object): any {
 		const m: any = this.module, a = m.instantiate(target, options), o = [];
 		m.instance.forEach((b) => {
 			if (a !== b) {
