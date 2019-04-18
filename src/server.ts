@@ -65,7 +65,12 @@ class Server {
 			}
 		}).then(() => {
 			this.alive = true;
+			return this;
 		});
+	}
+
+	close(): Promise<void> {
+		return this.s.close();
 	}
 
 	withController(list: any[]): Server {
