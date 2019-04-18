@@ -53,7 +53,11 @@ class Server {
             }
         }).then(() => {
             this.alive = true;
+            return this;
         });
+    }
+    close() {
+        return this.s.close();
     }
     withController(list) {
         for (const i in list) {
