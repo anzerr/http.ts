@@ -20,13 +20,17 @@ class Util {
 	}
 
 	path(...list: string[]): RegExp {
-		let u = path.join(...list.filter((a) => (a)))
-			.replace(/\\+/g, '\\/')
-			.replace(/:\w+/g, '(\\w+)');
+		let u = list.map((a) => {
+			return a.replace(/[^\w:\/]+/g, '')
+				.replace(/:\w+/g, '(\\w+)');
+		}).join('');
 		if (u[u.length - 1] === '/') {
 			u = u.substr(0, u.length - 2);
 		}
-		return new RegExp(`^${(u[0] !== '/') ? '/' : ''}${u}$`);
+		if (u[0] !== '/') {
+			u = '/' + u;
+		}
+		return new RegExp(`^${u.replace(/\//g, '\\/')}\\/?$`);
 	}
 }
 
