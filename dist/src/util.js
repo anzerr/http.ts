@@ -19,7 +19,7 @@ class Util {
     path(...list) {
         let u = list.map((a) => {
             return a.replace(/[^-_\.\w:\/]+/g, '')
-                .replace(/:\w+/g, '(\\w+)');
+                .replace(/:\w+/g, '([-_\\.\\w]+)');
         }).join('');
         if (u[u.length - 1] === '/') {
             u = u.substr(0, u.length - 2);
@@ -27,7 +27,7 @@ class Util {
         if (u[0] !== '/') {
             u = '/' + u;
         }
-        return new RegExp(`^${u.replace(/[\/\\^$*+?.()|[\]{}]/g, '\\$&')}\\/?$`);
+        return new RegExp(`^${u.replace(/[\/\.]/g, '\\$&')}\\/?$`);
     }
 }
 exports.default = (new Util());
