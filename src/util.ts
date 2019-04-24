@@ -1,5 +1,4 @@
 
-import * as path from 'path';
 import * as is from 'type.util';
 
 class Util {
