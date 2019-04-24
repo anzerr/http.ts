@@ -44,12 +44,15 @@ class Server {
             }
         }
     }
-    start() {
+    start(inject) {
         this.s = new http.Server(this.port);
         this.alive = false;
         return this.s.create((req, res) => {
             if (!this.route(req, res)) {
-                return res.status((req.url() === '/') ? 2000 : 404).send('');
+                if (inject) {
+                    return inject(req, res);
+                }
+                return res.status((req.url() === '/') ? 200 : 404).send('');
             }
         }).then(() => {
             this.alive = true;

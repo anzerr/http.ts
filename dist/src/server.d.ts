@@ -10,7 +10,7 @@ declare class Server {
     constructor(port?: number);
     instantiate(target: Object, options: Object): any;
     route(req: any, res: any): any;
-    start(): Promise<Server>;
+    start(inject?: any): Promise<Server>;
     close(): Promise<void>;
     withController(list: any[]): Server;
 }
