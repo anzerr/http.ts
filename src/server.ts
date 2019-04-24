@@ -79,7 +79,7 @@ class Server {
 	withController(list: any[]): Server {
 		for (const i in list) {
 			const base = Reflect.getMetadata(METADATA.PATH, list[i]);
-			if (base) {
+			if (is.defined(base)) {
 				const instance = new list[i]({}),
 					methods = util.getAllMethodNames(Object.getPrototypeOf(instance));
 				for (const x in methods) {
@@ -98,7 +98,6 @@ class Server {
 				}
 			}
 		}
-		console.log(this.map);
 		return this;
 	}
 

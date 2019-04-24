@@ -65,7 +65,7 @@ class Server {
     withController(list) {
         for (const i in list) {
             const base = Reflect.getMetadata(enum_1.METADATA.PATH, list[i]);
-            if (base) {
+            if (is.defined(base)) {
                 const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
                 for (const x in methods) {
                     const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]);
@@ -81,7 +81,6 @@ class Server {
                 }
             }
         }
-        console.log(this.map);
         return this;
     }
 }
