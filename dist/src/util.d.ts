@@ -1,6 +1,7 @@
 declare class Util {
     getAllMethodNames(prototype: any): any[];
-    path(...list: string[]): RegExp;
+    pathToReg(...list: string[]): RegExp;
+    pathJoin(...list: string[]): string;
 }
 declare const _default: Util;
 export default _default;

@@ -88,16 +88,17 @@ class Server {
 
 					if (is.defined(url) && is.defined(method)) {
 						this.map[method].push({
-							reg: util.path(base, url),
+							reg: util.pathToReg(base, url),
+							path: util.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
 							param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
 							class: list[i],
 							action: methods[x]
 						});
 					}
 				}
-
 			}
 		}
+		console.log(this.map);
 		return this;
 	}
 

@@ -71,7 +71,8 @@ class Server {
                     const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]);
                     if (is.defined(url) && is.defined(method)) {
                         this.map[method].push({
-                            reg: util_1.default.path(base, url),
+                            reg: util_1.default.pathToReg(base, url),
+                            path: util_1.default.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
                             param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
                             class: list[i],
                             action: methods[x]
@@ -80,6 +81,7 @@ class Server {
                 }
             }
         }
+        console.log(this.map);
         return this;
     }
 }
