@@ -4,7 +4,7 @@ import { METADATA, METHOD } from './enum';
 /* tslint:disable:variable-name */
 const Controller = (path?: string) => {
 	return (target: any) => {
-		Reflect.defineMetadata(METADATA.PATH, path || '/', target);
+		Reflect.defineMetadata(METADATA.PATH, path || '', target);
 	};
 };
 
