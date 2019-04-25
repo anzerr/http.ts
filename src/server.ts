@@ -92,7 +92,8 @@ class Server {
 							path: util.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
 							param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
 							class: list[i],
-							action: methods[x]
+							action: methods[x],
+							method: instance[methods[x]]
 						});
 					}
 				}
