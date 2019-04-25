@@ -76,7 +76,7 @@ class Server {
                             param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
                             class: list[i],
                             action: methods[x],
-                            method: instance[methods[x]]
+                            instance
                         });
                     }
                 }
