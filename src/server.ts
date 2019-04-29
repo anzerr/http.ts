@@ -67,6 +67,11 @@ class Server {
 				return res.status((req.url() === '/') ? 200 : 404).send('');
 			}
 		}).then(() => {
+			for (const i in this.map) {
+				for (const x in this.map[i]) {
+					this.instantiate(this.map[i][x].class, {});
+				}
+			}
 			this.alive = true;
 			return this;
 		});
