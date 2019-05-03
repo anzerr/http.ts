@@ -8,7 +8,7 @@ declare class Server {
     private module;
     alive: boolean;
     constructor(port?: number);
-    instantiate(target: Object, options: Object): any;
+    instantiate(target: Object, options: any[]): any;
     route(req: any, res: any): any;
     start(inject?: any): Promise<Server>;
     close(): Promise<void>;

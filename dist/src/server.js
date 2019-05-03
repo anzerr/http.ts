@@ -17,6 +17,9 @@ class Server {
         this.module = new inject_ts_1.Module([]);
     }
     instantiate(target, options) {
+        if (!is.array(options)) {
+            throw new Error('options needs to be any array');
+        }
         const m = this.module, a = m.instantiate(target, options), o = [];
         m.instance.forEach((b) => {
             if (a !== b) {
@@ -31,7 +34,7 @@ class Server {
         for (const i in this.map[method]) {
             const m = req.url().match(this.map[method][i].reg);
             if (m) {
-                const c = this.instantiate(this.map[method][i].class, { match: m, param: this.map[method][i].param, req, res });
+                const c = this.instantiate(this.map[method][i].class, [{ match: m, param: this.map[method][i].param, req, res }]);
                 return Promise.resolve().then(() => {
                     return c[this.map[method][i].action]();
                 }).then((r) => {
@@ -57,7 +60,7 @@ class Server {
         }).then(() => {
             for (const i in this.map) {
                 for (const x in this.map[i]) {
-                    this.instantiate(this.map[i][x].class, {});
+                    this.instantiate(this.map[i][x].class, [{}]);
                 }
             }
             this.alive = true;
