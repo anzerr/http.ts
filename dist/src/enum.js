@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.METADATA = {
-    PATH: 'path',
-    METHOD: 'method'
+    PATH: 'http.path',
+    METHOD: 'http.method',
+    PRIORITY: 'http.priority'
 };
 exports.METHOD = {
     GET: 'get',

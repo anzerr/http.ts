@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import {Server, Controller, Get, Post} from './index';
+import {Server, Controller, Get, Post, Priority} from './index';
 import {Injectable, Inject, Module} from 'inject.ts';
 
 @Injectable()
@@ -38,6 +38,7 @@ class Test extends Server.Controller {
 	}
 
 	@Get('error')
+	@Priority(10)
 	error() {
 		throw new Error('cat');
 	}
@@ -49,6 +50,12 @@ class Test extends Server.Controller {
 			id: this.param.id,
 			type: 'getUser'
 		};
+	}
+
+	@Get('overload')
+	@Priority(10)
+	othererror() {
+		this.status(200).send('overloaded');
 	}
 
 	@Get(':id/json')
@@ -67,4 +74,4 @@ class Test extends Server.Controller {
 
 new Server(3000)
 	.withController([Test])
-	.start();
+	.start().then(() => console.log('started'));

@@ -18,3 +18,10 @@ export const Put = (path?: string | string[]) => createRequestMap(METHOD.PUT, pa
 export const Options = (path?: string | string[]) => createRequestMap(METHOD.OPTIONS, path);
 export const Patch = (path?: string | string[]) => createRequestMap(METHOD.PATCH, path);
 export const All = (path?: string | string[]) => createRequestMap(METHOD.ALL, path);
+
+export const Priority = (n: number) => {
+	return (target, propertyKey: string, descriptor: PropertyDescriptor) => {
+		Reflect.defineMetadata(METADATA.PRIORITY, n || 5, descriptor.value);
+		return descriptor;
+	};
+};

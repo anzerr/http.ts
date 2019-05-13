@@ -59,6 +59,7 @@ class Server {
                 for (const x in this.map[i]) {
                     this.instantiate(this.map[i][x].class, {});
                 }
+                this.map[i].sort((a, b) => b.priority - a.priority);
             }
             this.alive = true;
             return this;
@@ -73,15 +74,16 @@ class Server {
             if (is.defined(base)) {
                 const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
                 for (const x in methods) {
-                    const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]);
+                    const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]), priority = Reflect.getMetadata(enum_1.METADATA.PRIORITY, instance[methods[x]]);
                     if (is.defined(url) && is.defined(method)) {
                         this.map[method].push({
+                            instance,
+                            priority: priority || 5,
                             reg: util_1.default.pathToReg(base, url),
                             path: util_1.default.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
                             param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
                             class: list[i],
-                            action: methods[x],
-                            instance
+                            action: methods[x]
                         });
                     }
                 }

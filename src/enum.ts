@@ -1,7 +1,8 @@
 
 export const METADATA = {
-	PATH: 'path',
-	METHOD: 'method'
+	PATH: 'http.path',
+	METHOD: 'http.method',
+	PRIORITY: 'http.priority'
 };
 
 export const METHOD = {

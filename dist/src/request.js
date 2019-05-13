@@ -17,4 +17,10 @@ exports.Put = (path) => createRequestMap(enum_1.METHOD.PUT, path);
 exports.Options = (path) => createRequestMap(enum_1.METHOD.OPTIONS, path);
 exports.Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
 exports.All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
+exports.Priority = (n) => {
+    return (target, propertyKey, descriptor) => {
+        Reflect.defineMetadata(enum_1.METADATA.PRIORITY, n || 5, descriptor.value);
+        return descriptor;
+    };
+};
 //# sourceMappingURL=request.js.map

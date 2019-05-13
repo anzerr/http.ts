@@ -1,6 +1,7 @@
 export declare const METADATA: {
     PATH: string;
     METHOD: string;
+    PRIORITY: string;
 };
 export declare const METHOD: {
     GET: string;
