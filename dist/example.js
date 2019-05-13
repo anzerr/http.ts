@@ -46,6 +46,9 @@ let Test = class Test extends index_1.Server.Controller {
             type: 'getUser'
         };
     }
+    othererror() {
+        this.status(200).send('overloaded');
+    }
     getFriendsJson() {
         this.logger.info('getFriendsJson');
         this.status(200).json([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -73,6 +76,7 @@ __decorate([
 ], Test.prototype, "create", null);
 __decorate([
     index_1.Get('error'),
+    index_1.Priority(10),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
@@ -83,6 +87,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], Test.prototype, "getUser", null);
+__decorate([
+    index_1.Get('overload'),
+    index_1.Priority(10),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], Test.prototype, "othererror", null);
 __decorate([
     index_1.Get(':id/json'),
     __metadata("design:type", Function),
@@ -100,5 +111,5 @@ Test = __decorate([
 ], Test);
 new index_1.Server(3000)
     .withController([Test])
-    .start();
+    .start().then(() => console.log('started'));
 //# sourceMappingURL=example.js.map
