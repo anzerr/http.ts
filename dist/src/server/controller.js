@@ -12,13 +12,15 @@ class Controller {
         return querystring.parse(this._req.query() || '');
     }
     constructor(options) {
-        const param = {};
-        for (const x in options.param) {
-            param[options.param[x]] = options.match[Number(x) + 1];
+        if (options) {
+            const param = {};
+            for (const x in options.param) {
+                param[options.param[x]] = options.match[Number(x) + 1];
+            }
+            this._param = param;
+            this._req = options.req;
+            this._res = options.res;
         }
-        this._param = param;
-        this._req = options.req;
-        this._res = options.res;
     }
     data() {
         if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
