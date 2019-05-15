@@ -1,6 +1,8 @@
+/// <reference types="node" />
 import 'reflect-metadata';
 import Controller from './server/controller';
-declare class Server {
+import * as events from 'events';
+declare class Server extends events {
     static Controller: typeof Controller;
     private s;
     private port;

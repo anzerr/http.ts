@@ -109,7 +109,8 @@ __decorate([
 Test = __decorate([
     index_1.Controller('user')
 ], Test);
-new index_1.Server(3000)
-    .withController([Test])
-    .start().then(() => console.log('started'));
+const server = new index_1.Server(3000)
+    .withController([Test]);
+server.on('log', (arg) => console.log(...arg));
+server.start().then(() => console.log('started'));
 //# sourceMappingURL=example.js.map

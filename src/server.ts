@@ -6,8 +6,9 @@ import {Module} from 'inject.ts';
 import util from './util';
 import Controller from './server/controller';
 import * as is from 'type.util';
+import * as events from 'events';
 
-class Server {
+class Server extends events {
 
 	static Controller = Controller;
 
@@ -18,6 +19,7 @@ class Server {
 	public alive: boolean;
 
 	constructor(port: number = 3050) {
+		super();
 		this.port = port;
 		this.map = {};
 		for (const i in METHOD) {
@@ -46,6 +48,7 @@ class Server {
 			const m = req.url().match(this.map[method][i].reg);
 			if (m) {
 				const c = this.instantiate(this.map[method][i].class, [{match: m, param: this.map[method][i].param, req, res}]);
+				this.emit('log', ['mapped', `${c.constructor.name} - ${this.map[method][i].action}`]);
 				return Promise.resolve().then(() => {
 					return c[this.map[method][i].action]();
 				}).then((r) => {
@@ -63,6 +66,7 @@ class Server {
 		this.s = new http.Server(this.port);
 		this.alive = false;
 		return this.s.create((req, res) => {
+			this.emit('log', ['request', `${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
 			if (!this.route(req, res)) {
 				if (inject) {
 					return inject(req, res);
@@ -76,12 +80,15 @@ class Server {
 				}
 				this.map[i].sort((a, b) => b.priority - a.priority);
 			}
+			this.emit('started');
 			this.alive = true;
 			return this;
 		});
 	}
 
 	close(): Promise<void> {
+		this.emit('close');
+		this.alive = false;
 		return this.s.close();
 	}
 

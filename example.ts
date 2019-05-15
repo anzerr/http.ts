@@ -72,6 +72,8 @@ class Test extends Server.Controller {
 
 }
 
-new Server(3000)
-	.withController([Test])
-	.start().then(() => console.log('started'));
+const server = new Server(3000)
+	.withController([Test]);
+
+server.on('log', (arg) => console.log(...arg));
+server.start().then(() => console.log('started'));
