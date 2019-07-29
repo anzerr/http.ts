@@ -9,11 +9,11 @@
 		"clean": "find ./src -regex \".*\\.\\(js\\|map\\|d\\.ts\\)\" -type f -delete && rm -Rf ./dist"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "anzerr",
+	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^11.13.4",
-		"eslint": "^5.16.0",
+		"eslint": "5.11.1",
 		"eslint-config-basic": "git+http://git@github.com/anzerr/eslintrc.git",
 		"ts-node": "^8.1.0",
 		"tslint": "^5.15.0",
@@ -28,5 +28,17 @@
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-basic"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:anzerr/http.ts.git"
+	},
+	"engines": {
+		"node": ">= 0.10.0"
+	},
+	"types": "dist/index.d.ts",
+	"bugs": {
+		"url": "https://github.com/anzerr/http.ts/issues"
+	},
+	"homepage": "https://github.com/anzerr/http.ts#readme"
 }
