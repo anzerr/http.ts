@@ -4,7 +4,7 @@ Decorator for a simple http server
 
 #### `Install`
 ``` bash
-npm install --save git+https://git@github.com/anzerr/http.ts.git
+npm install --save git+https://github.com/anzerr/http.ts.git
 ```
 
 ### `Example`
