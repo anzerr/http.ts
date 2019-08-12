@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import 'reflect-metadata';
 import Controller from './server/controller';
 import * as events from 'events';

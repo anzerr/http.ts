@@ -5,7 +5,7 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"example": "ts-node example.ts",
-		"build": "tsc -p ./",
+		"build": "npm run clean && tsc -p ./",
 		"clean": "find ./src -regex \".*\\.\\(js\\|map\\|d\\.ts\\)\" -type f -delete && rm -Rf ./dist"
 	},
 	"keywords": [],
