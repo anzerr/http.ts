@@ -5,6 +5,9 @@ class Controller {
     get response() {
         return this._res;
     }
+    get request() {
+        return this._req;
+    }
     get param() {
         return this._param;
     }

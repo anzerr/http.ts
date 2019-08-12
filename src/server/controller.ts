@@ -11,6 +11,10 @@ export default class Controller {
 		return this._res;
 	}
 
+	get request() {
+		return this._req;
+	}
+
 	get param() {
 		return this._param;
 	}

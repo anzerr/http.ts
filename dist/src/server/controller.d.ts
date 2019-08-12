@@ -3,6 +3,7 @@ export default class Controller {
     private _req;
     private _param;
     readonly response: any;
+    readonly request: any;
     readonly param: any;
     readonly query: any;
     constructor(options: any);
