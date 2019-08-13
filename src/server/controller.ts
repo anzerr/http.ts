@@ -23,7 +23,7 @@ export default class Controller {
 		return querystring.parse(this._req.query() || '');
 	}
 
-	constructor(options: any) {
+	constructor(options?: any) {
 		if (options) {
 			const param = {};
 			for (const x in options.param) {

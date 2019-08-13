@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import {Server, Controller, Get, Post, Priority} from './index';
+import {Server, Controller, Get, Post, Priority, Midware} from './index';
 import {Injectable, Inject, Module} from 'inject.ts';
 
 @Injectable()
@@ -18,12 +18,38 @@ class Log {
 
 }
 
+class Mid extends Server.Controller {
+
+	logger: Log;
+
+	func1() {
+		this.logger.info('func1');
+	}
+
+	func2() {
+		this.logger.info('func2');
+	}
+
+	func3() {
+		this.logger.info('func3');
+		if (Math.floor(Math.random() * 2) === 1) {
+			return this.status(200).json(['test']);
+		}
+	}
+
+}
+
+const mid = new Mid();
+
 @Controller('user')
 class Test extends Server.Controller {
 	@Inject(Log)
 	logger: Log;
 
 	@Get()
+	@Midware(mid.func1)
+	@Midware(mid.func2)
+	@Midware(mid.func3)
 	list() {
 		this.logger.info('list');
 		return `cat_${this.query.name || ''}`;

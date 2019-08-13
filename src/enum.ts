@@ -2,7 +2,8 @@
 export const METADATA = {
 	PATH: 'http.path',
 	METHOD: 'http.method',
-	PRIORITY: 'http.priority'
+	PRIORITY: 'http.priority',
+	MIDWARE: 'http.midware'
 };
 
 export const METHOD = {
