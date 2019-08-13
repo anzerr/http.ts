@@ -6,7 +6,7 @@ export default class Controller {
     readonly request: any;
     readonly param: any;
     readonly query: any;
-    constructor(options: any);
+    constructor(options?: any);
     data(): Promise<any>;
     status(...arg: any[]): any;
     json(...arg: any[]): any;

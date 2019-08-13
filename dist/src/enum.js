@@ -3,7 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.METADATA = {
     PATH: 'http.path',
     METHOD: 'http.method',
-    PRIORITY: 'http.priority'
+    PRIORITY: 'http.priority',
+    MIDWARE: 'http.midware'
 };
 exports.METHOD = {
     GET: 'get',

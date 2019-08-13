@@ -25,6 +25,21 @@ Log = __decorate([
     inject_ts_1.Injectable(),
     __metadata("design:paramtypes", [])
 ], Log);
+class Mid extends index_1.Server.Controller {
+    func1() {
+        this.logger.info('func1');
+    }
+    func2() {
+        this.logger.info('func2');
+    }
+    func3() {
+        this.logger.info('func3');
+        if (Math.floor(Math.random() * 2) === 1) {
+            return this.status(200).json(['test']);
+        }
+    }
+}
+const mid = new Mid();
 let Test = class Test extends index_1.Server.Controller {
     list() {
         this.logger.info('list');
@@ -64,6 +79,9 @@ __decorate([
 ], Test.prototype, "logger", void 0);
 __decorate([
     index_1.Get(),
+    index_1.Midware(mid.func1),
+    index_1.Midware(mid.func2),
+    index_1.Midware(mid.func3),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

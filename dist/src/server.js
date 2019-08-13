@@ -39,13 +39,30 @@ class Server extends events {
                 const c = this.instantiate(this.map[method][i].class, [{ match: m, param: this.map[method][i].param, req, res }]);
                 this.emit('log', ['mapped', `${c.constructor.name} - ${this.map[method][i].action}`]);
                 return Promise.resolve().then(() => {
+                    const midware = this.map[method][i].midware;
+                    if (midware.length !== 0) {
+                        let p = Promise.resolve();
+                        for (const i in midware) {
+                            ((func) => {
+                                p = p.then(() => func.apply(c)).then((res) => {
+                                    if (res instanceof http.Response) {
+                                        return Promise.reject();
+                                    }
+                                });
+                            })(midware[i]);
+                        }
+                        return p;
+                    }
+                }).then((res) => {
                     return c[this.map[method][i].action]();
                 }).then((r) => {
                     if (res !== r && r) {
                         return (is.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
                     }
                 }).catch((e) => {
-                    return res.status(500).send(e.toString());
+                    if (e && e instanceof Error) {
+                        return res.status(500).send(e.toString());
+                    }
                 });
             }
         }
@@ -84,11 +101,12 @@ class Server extends events {
             if (is.defined(base)) {
                 const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
                 for (const x in methods) {
-                    const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]), priority = Reflect.getMetadata(enum_1.METADATA.PRIORITY, instance[methods[x]]);
+                    const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]), priority = Reflect.getMetadata(enum_1.METADATA.PRIORITY, instance[methods[x]]), midware = Reflect.getMetadata(enum_1.METADATA.MIDWARE, instance[methods[x]]);
                     if (is.defined(url) && is.defined(method)) {
                         this.map[method].push({
                             instance,
                             priority: priority || 5,
+                            midware: (midware || []).reverse(),
                             reg: util_1.default.pathToReg(base, url),
                             path: util_1.default.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
                             param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
