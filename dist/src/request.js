@@ -17,11 +17,10 @@ exports.Put = (path) => createRequestMap(enum_1.METHOD.PUT, path);
 exports.Options = (path) => createRequestMap(enum_1.METHOD.OPTIONS, path);
 exports.Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
 exports.All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
-exports.Midware = (cd) => {
+exports.Midware = (func, ...arg) => {
     return (target, propertyKey, descriptor) => {
         const a = Reflect.getMetadata(enum_1.METADATA.MIDWARE, descriptor.value) || [];
-        a.push(cd);
-        console.log(cd.toString());
+        a.push({ func, arg });
         Reflect.defineMetadata(enum_1.METADATA.MIDWARE, a, descriptor.value);
         return descriptor;
     };

@@ -19,11 +19,10 @@ export const Options = (path?: string | string[]) => createRequestMap(METHOD.OPT
 export const Patch = (path?: string | string[]) => createRequestMap(METHOD.PATCH, path);
 export const All = (path?: string | string[]) => createRequestMap(METHOD.ALL, path);
 
-export const Midware = (cd: () => any) => {
+export const Midware = (func: (...args: any[]) => any, ...arg) => {
 	return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
 		const a = Reflect.getMetadata(METADATA.MIDWARE, descriptor.value) || [];
-		a.push(cd);
-		console.log(cd.toString());
+		a.push({func, arg});
 		Reflect.defineMetadata(METADATA.MIDWARE, a, descriptor.value);
 		return descriptor;
 	};

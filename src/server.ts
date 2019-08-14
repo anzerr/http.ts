@@ -54,8 +54,8 @@ class Server extends events {
 					if (midware.length !== 0) {
 						let p = Promise.resolve();
 						for (const i in midware) {
-							((func) => {
-								p = p.then(() => func.apply(c)).then((res) => {
+							((entry) => {
+								p = p.then(() => entry.func.apply(c, entry.arg)).then((res) => {
 									if (res instanceof http.Response) {
 										return Promise.reject();
 									}

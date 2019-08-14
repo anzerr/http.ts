@@ -26,8 +26,8 @@ class Mid extends Server.Controller {
 		this.logger.info('func1');
 	}
 
-	func2() {
-		this.logger.info('func2');
+	func2(a, b, c) {
+		this.logger.info('func2', a, b, c);
 	}
 
 	func3() {
@@ -48,7 +48,7 @@ class Test extends Server.Controller {
 
 	@Get()
 	@Midware(mid.func1)
-	@Midware(mid.func2)
+	@Midware(mid.func2, 1, 2, 3)
 	@Midware(mid.func3)
 	list() {
 		this.logger.info('list');

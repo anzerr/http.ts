@@ -29,8 +29,8 @@ class Mid extends index_1.Server.Controller {
     func1() {
         this.logger.info('func1');
     }
-    func2() {
-        this.logger.info('func2');
+    func2(a, b, c) {
+        this.logger.info('func2', a, b, c);
     }
     func3() {
         this.logger.info('func3');
@@ -80,7 +80,7 @@ __decorate([
 __decorate([
     index_1.Get(),
     index_1.Midware(mid.func1),
-    index_1.Midware(mid.func2),
+    index_1.Midware(mid.func2, 1, 2, 3),
     index_1.Midware(mid.func3),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
