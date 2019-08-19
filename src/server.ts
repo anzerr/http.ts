@@ -72,6 +72,7 @@ class Server extends events {
 					}
 				}).catch((e) => {
 					if (e && e instanceof Error) {
+						this.emit('error', e);
 						return res.status(500).send(e.toString());
 					}
 				});
