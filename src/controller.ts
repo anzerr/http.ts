@@ -1,5 +1,5 @@
 
-import { METADATA, METHOD } from './enum';
+import {METADATA} from './enum';
 
 /* tslint:disable:variable-name */
 const Controller = (path?: string) => {

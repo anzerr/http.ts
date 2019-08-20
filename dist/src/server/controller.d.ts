@@ -8,6 +8,7 @@ export default class Controller {
     readonly query: any;
     constructor(options?: any);
     data(): Promise<any>;
+    pipe(a: any): any;
     status(...arg: any[]): any;
     json(...arg: any[]): any;
     send(...arg: any[]): any;

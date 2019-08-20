@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const http = require("http.server");
-const enum_1 = require("./enum");
 const inject_ts_1 = require("inject.ts");
+const type_util_1 = require("type.util");
+const enum_1 = require("./enum");
 const util_1 = require("./util");
 const controller_1 = require("./server/controller");
-const is = require("type.util");
 const events = require("events");
 class Server extends events {
     constructor(port = 3050) {
@@ -19,7 +19,7 @@ class Server extends events {
         this.module = new inject_ts_1.Module([]);
     }
     instantiate(target, options) {
-        if (!is.array(options)) {
+        if (!type_util_1.default.array(options)) {
             throw new Error('options needs to be any array');
         }
         const m = this.module, a = m.instantiate(target, options), o = [];
@@ -36,32 +36,34 @@ class Server extends events {
         for (const i in this.map[method]) {
             const m = req.url().match(this.map[method][i].reg);
             if (m) {
-                const c = this.instantiate(this.map[method][i].class, [{ match: m, param: this.map[method][i].param, req, res }]);
+                const c = this.instantiate(this.map[method][i].class, [{ match: m, param: this.map[method][i].param, req: req, res: res }]);
                 this.emit('log', ['mapped', `${c.constructor.name} - ${this.map[method][i].action}`]);
                 return Promise.resolve().then(() => {
                     const midware = this.map[method][i].midware;
                     if (midware.length !== 0) {
                         let p = Promise.resolve();
-                        for (const i in midware) {
+                        for (const v in midware) {
                             ((entry) => {
-                                p = p.then(() => entry.func.apply(c, entry.arg)).then((res) => {
-                                    if (res instanceof http.Response) {
+                                p = p.then(() => entry.func.apply(c, entry.arg)).then((r) => {
+                                    if (r instanceof http.Response) {
                                         return Promise.reject();
                                     }
                                 });
-                            })(midware[i]);
+                            })(midware[v]);
                         }
                         return p;
                     }
-                }).then((res) => {
+                }).then(() => {
                     return c[this.map[method][i].action]();
                 }).then((r) => {
                     if (res !== r && r) {
-                        return (is.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
+                        return (type_util_1.default.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
                     }
                 }).catch((e) => {
                     if (e && e instanceof Error) {
-                        this.emit('error', e);
+                        if (this.listenerCount('error')) {
+                            this.emit('error', e);
+                        }
                         return res.status(500).send(e.toString());
                     }
                 });
@@ -99,13 +101,13 @@ class Server extends events {
     withController(list) {
         for (const i in list) {
             const base = Reflect.getMetadata(enum_1.METADATA.PATH, list[i]);
-            if (is.defined(base)) {
+            if (type_util_1.default.defined(base)) {
                 const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
                 for (const x in methods) {
                     const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]), priority = Reflect.getMetadata(enum_1.METADATA.PRIORITY, instance[methods[x]]), midware = Reflect.getMetadata(enum_1.METADATA.MIDWARE, instance[methods[x]]);
-                    if (is.defined(url) && is.defined(method)) {
+                    if (type_util_1.default.defined(url) && type_util_1.default.defined(method)) {
                         this.map[method].push({
-                            instance,
+                            instance: instance,
                             priority: priority || 5,
                             midware: (midware || []).reverse(),
                             reg: util_1.default.pathToReg(base, url),

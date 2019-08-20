@@ -1,11 +1,11 @@
 
 import 'reflect-metadata';
 import * as http from 'http.server';
-import { METADATA, METHOD } from './enum';
 import {Module} from 'inject.ts';
+import is from 'type.util';
+import {METADATA, METHOD} from './enum';
 import util from './util';
 import Controller from './server/controller';
-import * as is from 'type.util';
 import * as events from 'events';
 
 class Server extends events {
@@ -18,7 +18,7 @@ class Server extends events {
 	private module: Module;
 	public alive: boolean;
 
-	constructor(port: number = 3050) {
+	constructor(port = 3050) {
 		super();
 		this.port = port;
 		this.map = {};
@@ -28,7 +28,7 @@ class Server extends events {
 		this.module = new Module([]);
 	}
 
-	instantiate(target: Object, options: any[]): any {
+	instantiate(target: Record<string, any>, options: any[]): any {
 		if (!is.array(options)) {
 			throw new Error('options needs to be any array');
 		}
@@ -47,24 +47,24 @@ class Server extends events {
 		for (const i in this.map[method]) {
 			const m = req.url().match(this.map[method][i].reg);
 			if (m) {
-				const c = this.instantiate(this.map[method][i].class, [{match: m, param: this.map[method][i].param, req, res}]);
+				const c = this.instantiate(this.map[method][i].class, [{match: m, param: this.map[method][i].param, req: req, res: res}]);
 				this.emit('log', ['mapped', `${c.constructor.name} - ${this.map[method][i].action}`]);
 				return Promise.resolve().then(() => {
 					const midware = this.map[method][i].midware;
 					if (midware.length !== 0) {
 						let p = Promise.resolve();
-						for (const i in midware) {
+						for (const v in midware) {
 							((entry) => {
-								p = p.then(() => entry.func.apply(c, entry.arg)).then((res) => {
-									if (res instanceof http.Response) {
+								p = p.then(() => entry.func.apply(c, entry.arg)).then((r) => {
+									if (r instanceof http.Response) {
 										return Promise.reject();
 									}
 								});
-							})(midware[i]);
+							})(midware[v]);
 						}
 						return p;
 					}
-				}).then((res) => {
+				}).then(() => {
 					return c[this.map[method][i].action]();
 				}).then((r) => {
 					if (res !== r && r) {
@@ -72,7 +72,9 @@ class Server extends events {
 					}
 				}).catch((e) => {
 					if (e && e instanceof Error) {
-						this.emit('error', e);
+						if (this.listenerCount('error')) {
+							this.emit('error', e);
+						}
 						return res.status(500).send(e.toString());
 					}
 				});
@@ -124,7 +126,7 @@ class Server extends events {
 
 					if (is.defined(url) && is.defined(method)) {
 						this.map[method].push({
-							instance,
+							instance: instance,
 							priority: priority || 5,
 							midware: (midware || []).reverse(),
 							reg: util.pathToReg(base, url),

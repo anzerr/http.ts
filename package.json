@@ -12,12 +12,10 @@
 	"author": "anzerr",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^11.13.4",
-		"eslint-config-basic": "git+http://git@github.com/anzerr/eslintrc.git",
-		"ts-node": "^8.1.0",
-		"tslint": "^5.15.0",
-		"tslint-config-airbnb": "^5.11.1",
-		"typescript": "^3.4.3"
+		"@types/node": "^12.7.2",
+		"eslint-config-typescript": "git+https://git@github.com/anzerr/eslint-config-typescript.git",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.3"
 	},
 	"dependencies": {
 		"http.server": "git+https://git@github.com/anzerr/http.server.git",
@@ -26,7 +24,7 @@
 		"type.util": "git+https://git@github.com/anzerr/type.util.git"
 	},
 	"eslintConfig": {
-		"extends": "eslint-config-basic"
+		"extends": "eslint-config-typescript"
 	},
 	"repository": {
 		"type": "git",

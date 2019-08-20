@@ -1,17 +1,18 @@
 
 import 'reflect-metadata';
 import {Server, Controller, Get, Post, Priority, Midware} from './index';
-import {Injectable, Inject, Module} from 'inject.ts';
+import {Injectable, Inject} from 'inject.ts';
 
 @Injectable()
 class Log {
+
 	count: number;
 
 	constructor() {
 		this.count = 0;
 	}
 
-	info(...arg) {
+	info(...arg): void {
 		this.count += 1;
 		return console.log(this.count, ...arg);
 	}
@@ -22,15 +23,15 @@ class Mid extends Server.Controller {
 
 	logger: Log;
 
-	func1() {
+	func1(): void {
 		this.logger.info('func1');
 	}
 
-	func2(a, b, c) {
+	func2(a, b, c): void {
 		this.logger.info('func2', a, b, c);
 	}
 
-	func3() {
+	func3(): any {
 		this.logger.info('func3');
 		if (Math.floor(Math.random() * 2) === 1) {
 			return this.status(200).json(['test']);
@@ -43,6 +44,7 @@ const mid = new Mid();
 
 @Controller('user')
 class Test extends Server.Controller {
+
 	@Inject(Log)
 	logger: Log;
 
@@ -50,13 +52,13 @@ class Test extends Server.Controller {
 	@Midware(mid.func1)
 	@Midware(mid.func2, 1, 2, 3)
 	@Midware(mid.func3)
-	list() {
+	list(): any {
 		this.logger.info('list');
 		return `cat_${this.query.name || ''}`;
 	}
 
 	@Post()
-	create() {
+	create(): any {
 		this.logger.info('create');
 		return this.data().then((res) => {
 			return res;
@@ -65,12 +67,12 @@ class Test extends Server.Controller {
 
 	@Get('error')
 	@Priority(10)
-	error() {
+	error(): void {
 		throw new Error('cat');
 	}
 
 	@Get(':id')
-	getUser() {
+	getUser(): any {
 		this.logger.info('getUser');
 		return {
 			id: this.param.id,
@@ -80,18 +82,18 @@ class Test extends Server.Controller {
 
 	@Get('overload')
 	@Priority(10)
-	othererror() {
+	othererror(): any {
 		this.status(200).send('overloaded');
 	}
 
 	@Get(':id/json')
-	getFriendsJson() {
+	getFriendsJson(): any {
 		this.logger.info('getFriendsJson');
 		this.status(200).json([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 	}
 
 	@Get(':id/friends')
-	getFriends() {
+	getFriends(): any {
 		this.logger.info('getFriends');
 		this.status(200).send('3');
 	}
@@ -102,4 +104,8 @@ const server = new Server(3000)
 	.withController([Test]);
 
 server.on('log', (arg) => console.log(...arg));
+// get throw error from controller
+/* server.on('error', (arg) => {
+	console.log(arg);
+});*/
 server.start().then(() => console.log('started'));

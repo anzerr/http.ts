@@ -20,7 +20,7 @@ exports.All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
 exports.Midware = (func, ...arg) => {
     return (target, propertyKey, descriptor) => {
         const a = Reflect.getMetadata(enum_1.METADATA.MIDWARE, descriptor.value) || [];
-        a.push({ func, arg });
+        a.push({ func: func, arg: arg });
         Reflect.defineMetadata(enum_1.METADATA.MIDWARE, a, descriptor.value);
         return descriptor;
     };

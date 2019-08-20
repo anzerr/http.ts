@@ -10,7 +10,7 @@ declare class Server extends events {
     private module;
     alive: boolean;
     constructor(port?: number);
-    instantiate(target: Object, options: any[]): any;
+    instantiate(target: Record<string, any>, options: any[]): any;
     route(req: any, res: any): any;
     start(inject?: any): Promise<Server>;
     close(): Promise<void>;

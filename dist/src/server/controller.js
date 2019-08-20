@@ -31,6 +31,12 @@ class Controller {
         }
         throw new Error('There\'s no data possible on this request');
     }
+    pipe(a) {
+        if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
+            return this._req.req().pipe(a);
+        }
+        throw new Error('There\'s no data possible on this request');
+    }
     status(...arg) {
         return this._res.status(...arg);
     }

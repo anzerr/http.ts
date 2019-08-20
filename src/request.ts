@@ -11,18 +11,18 @@ const createRequestMap = (method: string, path?: string | string[]) => {
 	};
 };
 
-export const Get = (path?: string | string[]) => createRequestMap(METHOD.GET, path);
-export const Post = (path?: string | string[]) => createRequestMap(METHOD.POST, path);
-export const Delete = (path?: string | string[]) => createRequestMap(METHOD.DELETE, path);
-export const Put = (path?: string | string[]) => createRequestMap(METHOD.PUT, path);
-export const Options = (path?: string | string[]) => createRequestMap(METHOD.OPTIONS, path);
-export const Patch = (path?: string | string[]) => createRequestMap(METHOD.PATCH, path);
-export const All = (path?: string | string[]) => createRequestMap(METHOD.ALL, path);
+export const Get = (path?: string | string[]): any => createRequestMap(METHOD.GET, path);
+export const Post = (path?: string | string[]): any => createRequestMap(METHOD.POST, path);
+export const Delete = (path?: string | string[]): any => createRequestMap(METHOD.DELETE, path);
+export const Put = (path?: string | string[]): any => createRequestMap(METHOD.PUT, path);
+export const Options = (path?: string | string[]): any => createRequestMap(METHOD.OPTIONS, path);
+export const Patch = (path?: string | string[]): any => createRequestMap(METHOD.PATCH, path);
+export const All = (path?: string | string[]): any => createRequestMap(METHOD.ALL, path);
 
 export const Midware = (func: (...args: any[]) => any, ...arg) => {
 	return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
 		const a = Reflect.getMetadata(METADATA.MIDWARE, descriptor.value) || [];
-		a.push({func, arg});
+		a.push({func: func, arg: arg});
 		Reflect.defineMetadata(METADATA.MIDWARE, a, descriptor.value);
 		return descriptor;
 	};

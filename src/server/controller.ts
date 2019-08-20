@@ -7,15 +7,15 @@ export default class Controller {
 	private _req: any;
 	private _param: any;
 
-	get response() {
+	get response(): any {
 		return this._res;
 	}
 
-	get request() {
+	get request(): any {
 		return this._req;
 	}
 
-	get param() {
+	get param(): any {
 		return this._param;
 	}
 
@@ -43,15 +43,23 @@ export default class Controller {
 		throw new Error('There\'s no data possible on this request');
 	}
 
-	status(...arg) {
+	pipe(a: any): any {
+		if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
+			return this._req.req().pipe(a);
+		}
+		throw new Error('There\'s no data possible on this request');
+	}
+
+	status(...arg): any {
 		return this._res.status(...arg);
 	}
 
-	json(...arg) {
+	json(...arg): any {
 		return this._res.json(...arg);
 	}
 
-	send(...arg) {
+	send(...arg): any {
 		return this._res.send(...arg);
 	}
+
 }

@@ -84,13 +84,13 @@ __decorate([
     index_1.Midware(mid.func3),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Object)
 ], Test.prototype, "list", null);
 __decorate([
     index_1.Post(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Object)
 ], Test.prototype, "create", null);
 __decorate([
     index_1.Get('error'),
@@ -103,26 +103,26 @@ __decorate([
     index_1.Get(':id'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Object)
 ], Test.prototype, "getUser", null);
 __decorate([
     index_1.Get('overload'),
     index_1.Priority(10),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Object)
 ], Test.prototype, "othererror", null);
 __decorate([
     index_1.Get(':id/json'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Object)
 ], Test.prototype, "getFriendsJson", null);
 __decorate([
     index_1.Get(':id/friends'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Object)
 ], Test.prototype, "getFriends", null);
 Test = __decorate([
     index_1.Controller('user')
@@ -130,5 +130,9 @@ Test = __decorate([
 const server = new index_1.Server(3000)
     .withController([Test]);
 server.on('log', (arg) => console.log(...arg));
+// get throw error from controller
+/* server.on('error', (arg) => {
+    console.log(arg);
+});*/
 server.start().then(() => console.log('started'));
 //# sourceMappingURL=example.js.map

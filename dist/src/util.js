@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const is = require("type.util");
+const type_util_1 = require("type.util");
 class Util {
     getAllMethodNames(prototype) {
         let out = [];
         do {
-            out = out.concat(Object.getOwnPropertyNames(prototype).filter(prop => {
+            out = out.concat(Object.getOwnPropertyNames(prototype).filter((prop) => {
                 const descriptor = Object.getOwnPropertyDescriptor(prototype, prop);
                 if (descriptor.set || descriptor.get) {
                     return false;
                 }
-                return prop !== 'constructor' && is.function(prototype[prop]);
+                return prop !== 'constructor' && type_util_1.default.function(prototype[prop]);
             }));
             /* tslint:disable:no-parameter-reassignment */
         } while ((prototype = Reflect.getPrototypeOf(prototype)) && prototype !== Object.prototype);
