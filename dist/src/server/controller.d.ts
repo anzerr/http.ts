@@ -6,6 +6,7 @@ export default class Controller {
     readonly request: any;
     readonly param: any;
     readonly query: any;
+    readonly headers: any;
     constructor(options?: any);
     data(): Promise<any>;
     pipe(a: any): any;

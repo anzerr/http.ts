@@ -23,6 +23,10 @@ export default class Controller {
 		return querystring.parse(this._req.query() || '');
 	}
 
+	get headers(): any {
+		return this._req.headers();
+	}
+
 	constructor(options?: any) {
 		if (options) {
 			const param = {};

@@ -14,6 +14,9 @@ class Controller {
     get query() {
         return querystring.parse(this._req.query() || '');
     }
+    get headers() {
+        return this._req.headers();
+    }
     constructor(options) {
         if (options) {
             const param = {};
