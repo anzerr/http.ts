@@ -70,7 +70,7 @@ class Server extends events {
             }
         }
     }
-    start(inject, intercept) {
+    start(intercept) {
         this.s = new http.Server(this.port);
         this.alive = false;
         return this.s.create((req, res) => {
@@ -79,9 +79,6 @@ class Server extends events {
                 return;
             }
             if (!this.route(req, res)) {
-                if (inject) {
-                    return inject(req, res);
-                }
                 return res.status((req.url() === '/') ? 200 : 404).send('');
             }
         }).then(() => {
