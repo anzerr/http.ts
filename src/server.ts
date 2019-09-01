@@ -82,11 +82,14 @@ class Server extends events {
 		}
 	}
 
-	start(inject?: any): Promise<Server> {
+	start(inject?: any, intercept?: (req: any, res: any) => boolean): Promise<Server> {
 		this.s = new http.Server(this.port);
 		this.alive = false;
 		return this.s.create((req, res) => {
 			this.emit('log', ['request', `${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
+			if (intercept && intercept(req, res)) {
+				return;
+			}
 			if (!this.route(req, res)) {
 				if (inject) {
 					return inject(req, res);

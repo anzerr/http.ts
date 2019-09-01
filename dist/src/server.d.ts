@@ -12,7 +12,7 @@ declare class Server extends events {
     constructor(port?: number);
     instantiate(target: Record<string, any>, options: any[]): any;
     route(req: any, res: any): any;
-    start(inject?: any): Promise<Server>;
+    start(inject?: any, intercept?: (req: any, res: any) => boolean): Promise<Server>;
     close(): Promise<void>;
     withController(list: any[]): Server;
 }
