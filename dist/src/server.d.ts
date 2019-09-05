@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import 'reflect-metadata';
-import Controller from './server/controller';
 import * as events from 'events';
+import Controller from './server/controller';
 declare class Server extends events {
     static Controller: typeof Controller;
     private s;
@@ -11,6 +11,8 @@ declare class Server extends events {
     alive: boolean;
     constructor(port?: number);
     instantiate(target: Record<string, any>, options: any[]): any;
+    find(req: any): any | void;
+    midware(map: any, controller: any): Promise<any | void>;
     route(req: any, res: any): any;
     start(intercept?: (req: any, res: any) => boolean): Promise<Server>;
     close(): Promise<void>;

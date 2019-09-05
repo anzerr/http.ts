@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
+const events = require("events");
 const http = require("http.server");
 const inject_ts_1 = require("inject.ts");
 const type_util_1 = require("type.util");
 const enum_1 = require("./enum");
 const util_1 = require("./util");
 const controller_1 = require("./server/controller");
-const events = require("events");
 class Server extends events {
     constructor(port = 3050) {
         super();
@@ -22,52 +22,63 @@ class Server extends events {
         if (!type_util_1.default.array(options)) {
             throw new Error('options needs to be any array');
         }
-        const m = this.module, a = m.instantiate(target, options), o = [];
-        m.instance.forEach((b) => {
-            if (a !== b) {
-                o.push(b);
-            }
-        });
-        m.instance = o;
-        return a;
+        return this.module.instantiate(target, options, true);
     }
-    route(req, res) {
+    find(req) {
         const method = req.method().toLowerCase();
         for (const i in this.map[method]) {
             const m = req.url().match(this.map[method][i].reg);
             if (m) {
-                const c = this.instantiate(this.map[method][i].class, [{ match: m, param: this.map[method][i].param, req: req, res: res }]);
-                this.emit('log', ['mapped', `${c.constructor.name} - ${this.map[method][i].action}`]);
-                return Promise.resolve().then(() => {
-                    const midware = this.map[method][i].midware;
-                    if (midware.length !== 0) {
-                        let p = Promise.resolve();
-                        for (const v in midware) {
-                            ((entry) => {
-                                p = p.then(() => entry.func.apply(c, entry.arg)).then((r) => {
-                                    if (r instanceof http.Response) {
-                                        return Promise.reject();
-                                    }
-                                });
-                            })(midware[v]);
-                        }
-                        return p;
-                    }
-                }).then(() => {
-                    return c[this.map[method][i].action]();
-                }).then((r) => {
-                    if (res !== r && r) {
-                        return (type_util_1.default.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
-                    }
-                }).catch((e) => {
-                    if (e && e instanceof Error) {
-                        if (this.listenerCount('error')) {
-                            this.emit('error', e);
-                        }
-                        return res.status(500).send(e.toString());
-                    }
-                });
+                return { m: m, map: this.map[method][i] };
             }
+        }
+        ;
+    }
+    midware(map, controller) {
+        const midware = map.midware;
+        if (midware.length !== 0) {
+            let p = Promise.resolve();
+            for (const v in midware) {
+                ((entry) => {
+                    p = p.then(() => entry.func.apply(controller, entry.arg)).then((r) => {
+                        if (r instanceof http.Response) {
+                            return Promise.reject();
+                        }
+                    });
+                })(midware[v]);
+            }
+            return p;
+        }
+        return Promise.resolve();
+    }
+    route(req, res) {
+        const { m, map } = this.find(req);
+        if (m) {
+            const controller = this.instantiate(map.class, [{
+                    match: m,
+                    param: map.param,
+                    req: req,
+                    res: res
+                }]);
+            this.emit('log', ['mapped', `${c.constructor.name} - ${map.action}`]);
+            return this.midware(map, controller).then(() => {
+                return controller[map.action]();
+            }).then((r) => {
+                if (res !== r && r) {
+                    return (type_util_1.default.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
+                }
+            }).catch((e) => {
+                if (e && e instanceof Error) {
+                    if (this.listenerCount('error')) {
+                        this.emit('error', e);
+                    }
+                    return res.status(500).send(e.toString());
+                }
+            }).then(() => {
+                for (let i in controller) {
+                    controller[i] = null;
+                }
+            });
         }
     }
     start(intercept) {

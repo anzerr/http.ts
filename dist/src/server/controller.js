@@ -2,6 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const querystring = require("querystring");
 class Controller {
+    constructor(options) {
+        if (options) {
+            const param = {};
+            for (const x in options.param) {
+                param[options.param[x]] = options.match[Number(x) + 1];
+            }
+            this._param = param;
+            this._req = options.req;
+            this._res = options.res;
+        }
+    }
     get response() {
         return this._res;
     }
@@ -16,17 +27,6 @@ class Controller {
     }
     get headers() {
         return this._req.headers();
-    }
-    constructor(options) {
-        if (options) {
-            const param = {};
-            for (const x in options.param) {
-                param[options.param[x]] = options.match[Number(x) + 1];
-            }
-            this._param = param;
-            this._req = options.req;
-            this._res = options.res;
-        }
     }
     data() {
         if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {

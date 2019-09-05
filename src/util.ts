@@ -25,9 +25,9 @@ class Util {
 	}
 
 	pathJoin(...list: string[]): string {
-		let u = list.map((a) => {
-			return a.replace(/[^-_\.\w:\/]+/g, '');
-		}).filter((a) => a && a !== '/').join('/');
+		let u = list.map((a) => a.replace(/[^-_\.\w:\/]+/g, ''))
+			.filter((a) => a && a !== '/')
+			.join('/');
 		if (u[u.length - 1] === '/') {
 			u = u.substr(0, u.length - 1);
 		}
