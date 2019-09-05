@@ -19,7 +19,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm audit
-      - run: npm i -g git+https://git@github.com/anzerr/gha.cli.git && gha scope
+      - run: npm i -g git+https://git@github.com/anzerr/gha.cli.git && gha scope --user anzerr
 
   publish-npm:
     needs: build
