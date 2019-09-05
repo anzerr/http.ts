@@ -32,7 +32,7 @@ class Server extends events {
                 return { m: m, map: this.map[method][i] };
             }
         }
-        ;
+        return { m: null, map: null };
     }
     midware(map, controller) {
         const midware = map.midware;
@@ -60,7 +60,7 @@ class Server extends events {
                     req: req,
                     res: res
                 }]);
-            this.emit('log', ['mapped', `${c.constructor.name} - ${map.action}`]);
+            this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
             return this.midware(map, controller).then(() => {
                 return controller[map.action]();
             }).then((r) => {
@@ -75,7 +75,7 @@ class Server extends events {
                     return res.status(500).send(e.toString());
                 }
             }).then(() => {
-                for (let i in controller) {
+                for (const i in controller) {
                     controller[i] = null;
                 }
             });

@@ -1,4 +1,4 @@
-name: Node.js Package
+name: Build
 
 on:
   pull_request:
@@ -19,6 +19,7 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm audit
+      - run: npm i -g git+https://git@github.com/anzerr/gha.cli.git && gha scope
 
   publish-npm:
     needs: build
@@ -29,7 +30,6 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: npm i -g git+https://git@github.com/anzerr/gha.cli.git && gha scope
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm}}
@@ -44,7 +44,6 @@ jobs:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
           scope: '@anzerr'
-      - run: npm i -g git+https://git@github.com/anzerr/gha.cli.git && gha scope
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
