@@ -1,5 +1,6 @@
 
 import * as querystring from 'querystring';
+import is from 'type.util';
 
 export default class Controller {
 
@@ -35,7 +36,7 @@ export default class Controller {
 			this._param = param;
 			this._req = options.req;
 			this._res = options.res;
-			if (this._req) {
+			if (this._req && is.function(this._req.query)) {
 				this.query = querystring.parse(this._req.query() || '');
 			}
 		}

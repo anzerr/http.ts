@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const querystring = require("querystring");
+const type_util_1 = require("type.util");
 class Controller {
     constructor(options) {
         if (options) {
@@ -11,7 +12,7 @@ class Controller {
             this._param = param;
             this._req = options.req;
             this._res = options.res;
-            if (this._req) {
+            if (this._req && type_util_1.default.function(this._req.query)) {
                 this.query = querystring.parse(this._req.query() || '');
             }
         }
