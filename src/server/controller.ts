@@ -7,6 +7,8 @@ export default class Controller {
 	private _req: any;
 	private _param: any;
 
+	query: {[key: string]: any};
+
 	get response(): any {
 		return this._res;
 	}
@@ -17,10 +19,6 @@ export default class Controller {
 
 	get param(): any {
 		return this._param;
-	}
-
-	get query(): any {
-		return querystring.parse(this._req.query() || '');
 	}
 
 	get headers(): any {
@@ -37,6 +35,12 @@ export default class Controller {
 			this._param = param;
 			this._req = options.req;
 			this._res = options.res;
+			if (this._req) {
+				this.query = querystring.parse(this._req.query() || '');
+				for (const i in this.query) {
+					this.query[i] = decodeURIComponent(this.query[i]);
+				}
+			}
 		}
 	}
 

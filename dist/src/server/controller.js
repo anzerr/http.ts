@@ -11,6 +11,12 @@ class Controller {
             this._param = param;
             this._req = options.req;
             this._res = options.res;
+            if (this._req) {
+                this.query = querystring.parse(this._req.query() || '');
+                for (const i in this.query) {
+                    this.query[i] = decodeURIComponent(this.query[i]);
+                }
+            }
         }
     }
     get response() {
@@ -21,9 +27,6 @@ class Controller {
     }
     get param() {
         return this._param;
-    }
-    get query() {
-        return querystring.parse(this._req.query() || '');
     }
     get headers() {
         return this._req.headers();

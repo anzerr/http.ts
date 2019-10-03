@@ -2,10 +2,12 @@ export default class Controller {
     private _res;
     private _req;
     private _param;
+    query: {
+        [key: string]: any;
+    };
     readonly response: any;
     readonly request: any;
     readonly param: any;
-    readonly query: any;
     readonly headers: any;
     constructor(options?: any);
     data(): Promise<any>;
