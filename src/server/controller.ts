@@ -37,9 +37,6 @@ export default class Controller {
 			this._res = options.res;
 			if (this._req) {
 				this.query = querystring.parse(this._req.query() || '');
-				for (const i in this.query) {
-					this.query[i] = decodeURIComponent(this.query[i]);
-				}
 			}
 		}
 	}
