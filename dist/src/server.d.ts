@@ -13,6 +13,7 @@ declare class Server extends events {
     instantiate(target: Record<string, any>, options: any[]): any;
     find(req: any): any | void;
     midware(map: any, controller: any): Promise<any | void>;
+    destroy(controller: any): void;
     route(req: any, res: any): any;
     start(intercept?: (req: any, res: any) => boolean): Promise<Server>;
     close(): Promise<void>;

@@ -64,6 +64,12 @@ class Server extends events {
 		return Promise.resolve();
 	}
 
+	destroy(controller) {
+		for (const i in controller) {
+			controller[i] = null;
+		}
+	}
+
 	route(req: any, res: any): any {
 		const {m, map} = this.find(req);
 		if (m) {
@@ -73,6 +79,24 @@ class Server extends events {
 				req: req,
 				res: res
 			}]);
+			controller.meta = {
+				method: controller[map.action],
+				name: controller.constructor.name,
+				action: map.action
+			};
+
+			const clear = setTimeout(() => this.destroy(controller), 60 * 1000), keys = ['send', 'pipe'];
+			for (let i in keys) {
+				((k) => {
+					const o = res[k].bind(res);
+					res[k] = (...arg) => {
+						let result = o(...arg);
+						this.destroy(controller);
+						clearTimeout(clear);
+						return result;
+					}
+				})(keys[i]);
+			}
 
 			this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
 			return this.midware(map, controller).then(() => {
@@ -87,10 +111,6 @@ class Server extends events {
 						this.emit('error', e);
 					}
 					return res.status(500).send(e.toString());
-				}
-			}).then(() => {
-				for (const i in controller) {
-					controller[i] = null;
 				}
 			});
 		}

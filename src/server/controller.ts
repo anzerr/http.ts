@@ -8,6 +8,7 @@ export default class Controller {
 	private _req: any;
 	private _param: any;
 
+	meta: {method: any, action: any, name: any};
 	query: {[key: string]: any};
 
 	get response(): any {

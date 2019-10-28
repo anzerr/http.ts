@@ -100,8 +100,24 @@ class Test extends Server.Controller {
 
 }
 
+@Controller('other')
+class Test1 extends Test {
+
+	@Inject(Log)
+	logger: Log;
+
+	@Get(':id/time')
+	getTime(): any {
+		this.logger.info('getTime');
+		setTimeout(() => {
+			this.status(200).json(this.meta);
+		}, 1000);
+	}
+
+}
+
 const server = new Server(3000)
-	.withController([Test]);
+	.withController([Test, Test1]);
 
 server.on('log', (arg) => console.log(...arg));
 // get throw error from controller

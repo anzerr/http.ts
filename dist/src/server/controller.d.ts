@@ -2,6 +2,11 @@ export default class Controller {
     private _res;
     private _req;
     private _param;
+    meta: {
+        method: any;
+        action: any;
+        name: any;
+    };
     query: {
         [key: string]: any;
     };

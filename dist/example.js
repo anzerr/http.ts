@@ -127,8 +127,29 @@ __decorate([
 Test = __decorate([
     index_1.Controller('user')
 ], Test);
+let Test1 = class Test1 extends Test {
+    getTime() {
+        this.logger.info('getTime');
+        setTimeout(() => {
+            this.status(200).json(this.meta);
+        }, 1000);
+    }
+};
+__decorate([
+    inject_ts_1.Inject(Log),
+    __metadata("design:type", Log)
+], Test1.prototype, "logger", void 0);
+__decorate([
+    index_1.Get(':id/time'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Object)
+], Test1.prototype, "getTime", null);
+Test1 = __decorate([
+    index_1.Controller('other')
+], Test1);
 const server = new index_1.Server(3000)
-    .withController([Test]);
+    .withController([Test, Test1]);
 server.on('log', (arg) => console.log(...arg));
 // get throw error from controller
 /* server.on('error', (arg) => {
