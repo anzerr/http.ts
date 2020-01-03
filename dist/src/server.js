@@ -141,7 +141,7 @@ class Server extends events {
                             midware: (midware || []).reverse(),
                             reg: util_1.default.pathToReg(base, url),
                             path: util_1.default.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
-                            param: (url.match(/:\w+/) || []).map((a) => a.substr(1)),
+                            param: (url.match(/:\w+/g) || []).map((a) => a.substr(1)),
                             class: list[i],
                             action: methods[x]
                         });
