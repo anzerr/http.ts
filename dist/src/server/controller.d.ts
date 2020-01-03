@@ -10,10 +10,10 @@ export default class Controller {
     query: {
         [key: string]: any;
     };
-    readonly response: any;
-    readonly request: any;
-    readonly param: any;
-    readonly headers: any;
+    get response(): any;
+    get request(): any;
+    get param(): any;
+    get headers(): any;
     constructor(options?: any);
     data(): Promise<any>;
     pipe(a: any): any;
