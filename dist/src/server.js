@@ -70,7 +70,10 @@ class Server extends events {
                 name: controller.constructor.name,
                 action: map.action
             };
-            const clear = setTimeout(() => this.destroy(controller), 60 * 1000), keys = ['send', 'pipe'];
+            const clear = setTimeout(() => {
+                res.status(504).send('request timeout after 5mins');
+                this.destroy(controller);
+            }, 5 * 60 * 1000), keys = ['send', 'pipe'];
             for (let i in keys) {
                 ((k) => {
                     const o = res[k].bind(res);
