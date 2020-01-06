@@ -88,6 +88,7 @@ class Server extends events {
 			const clear = setTimeout(() => {
 				res.status(504).send('request timeout after 5mins');
 				this.destroy(controller);
+				this.emit('timeout');
 			}, 5 * 60 * 1000), keys = ['send', 'pipe'];
 			for (let i in keys) {
 				((k) => {
