@@ -1,22 +1,35 @@
 {
 	"name": "http.ts",
 	"version": "1.0.29",
-	"description": "",
+	"description": "Simple http server in ts",
+	"keywords": [
+		"decorators",
+		"http",
+		"nodejs",
+		"ts",
+		"typescript",
+		"util"
+	],
+	"homepage": "https://github.com/anzerr/http.ts#readme",
+	"bugs": {
+		"url": "https://github.com/anzerr/http.ts/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:anzerr/http.ts.git"
+	},
+	"license": "MIT",
+	"author": "anzerr",
 	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
 		"test": "ts-node test/index.ts",
 		"example": "ts-node example.ts",
 		"build": "npm run clean && tsc -p ./",
 		"clean": "find ./src -regex \".*\\.\\(js\\|map\\|d\\.ts\\)\" -type f -delete && rm -Rf ./dist"
 	},
-	"keywords": [],
-	"author": "anzerr",
-	"license": "MIT",
-	"devDependencies": {
-		"@types/node": "^12.7.2",
-		"eslint-config-typescript": "git+https://git@github.com/anzerr/eslint-config-typescript.git",
-		"ts-node": "^8.3.0",
-		"typescript": "^3.5.3"
+	"eslintConfig": {
+		"extends": "eslint-config-typescript"
 	},
 	"dependencies": {
 		"http.server": "git+https://git@github.com/anzerr/http.server.git",
@@ -24,19 +37,13 @@
 		"reflect-metadata": "^0.1.13",
 		"type.util": "git+https://git@github.com/anzerr/type.util.git"
 	},
-	"eslintConfig": {
-		"extends": "eslint-config-typescript"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:anzerr/http.ts.git"
+	"devDependencies": {
+		"@types/node": "^12.7.2",
+		"eslint-config-typescript": "git+https://git@github.com/anzerr/eslint-config-typescript.git",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.3"
 	},
 	"engines": {
 		"node": ">= 0.10.0"
-	},
-	"types": "dist/index.d.ts",
-	"bugs": {
-		"url": "https://github.com/anzerr/http.ts/issues"
-	},
-	"homepage": "https://github.com/anzerr/http.ts#readme"
+	}
 }

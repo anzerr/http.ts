@@ -1,0 +1,15 @@
+node_modules
+node_modules/*
+.tag*
+.github
+LICENSE
+.git/
+.idea/
+./example.ts
+./example.ts
+./test.ts
+./tsconfig.json
+/test.ts
+/tsconfig.json
+./Build/*
+/src/*

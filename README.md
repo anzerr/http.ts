@@ -1,5 +1,7 @@
 
 ### `Intro`
+![GitHub Actions status | publish](https://github.com/anzerr/http.ts/workflows/publish/badge.svg)
+
 Decorator for a simple http server
 
 #### `Install`
