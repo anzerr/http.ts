@@ -104,6 +104,9 @@ class Server extends events {
 
 			this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
 			return this.midware(map, controller).then(() => {
+				if (!is.function(controller[map.action])) {
+					throw new Error(`the action "${map.action}" on the controller is not a function it\'s "${typeof controller[map.action]}"`);
+				}
 				return controller[map.action]();
 			}).then((r) => {
 				if (res !== r && r) {
