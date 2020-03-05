@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import * as events from 'events';
+import events from 'events';
 import * as http from 'http.server';
 import {Module} from 'inject.ts';
 import is from 'type.util';
@@ -8,7 +8,7 @@ import {METADATA, METHOD} from './enum';
 import util from './util';
 import Controller from './server/controller';
 
-class Server extends events {
+class Server extends events.EventEmitter {
 
 	static Controller = Controller;
 
@@ -86,19 +86,19 @@ class Server extends events {
 			};
 
 			const clear = setTimeout(() => {
-				res.status(504).send('request timeout after 5mins');
-				this.destroy(controller);
-				this.emit('timeout');
-			}, 5 * 60 * 1000), keys = ['send', 'pipe'];
-			for (let i in keys) {
+					res.status(504).send('request timeout after 5mins');
+					this.destroy(controller);
+					this.emit('timeout');
+				}, 5 * 60 * 1000), keys = ['send', 'pipe'];
+			for (const i in keys) {
 				((k) => {
 					const o = res[k].bind(res);
 					res[k] = (...arg) => {
-						let result = o(...arg);
+						const result = o(...arg);
 						this.destroy(controller);
 						clearTimeout(clear);
 						return result;
-					}
+					};
 				})(keys[i]);
 			}
 

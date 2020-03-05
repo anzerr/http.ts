@@ -1,6 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const type_util_1 = require("type.util");
+const type_util_1 = __importDefault(require("type.util"));
 class Util {
     getAllMethodNames(prototype) {
         let out = [];

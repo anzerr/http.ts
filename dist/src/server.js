@@ -1,14 +1,24 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const events = require("events");
-const http = require("http.server");
+const events_1 = __importDefault(require("events"));
+const http = __importStar(require("http.server"));
 const inject_ts_1 = require("inject.ts");
-const type_util_1 = require("type.util");
+const type_util_1 = __importDefault(require("type.util"));
 const enum_1 = require("./enum");
-const util_1 = require("./util");
-const controller_1 = require("./server/controller");
-class Server extends events {
+const util_1 = __importDefault(require("./util"));
+const controller_1 = __importDefault(require("./server/controller"));
+class Server extends events_1.default.EventEmitter {
     constructor(port = 3050) {
         super();
         this.port = port;
@@ -75,11 +85,11 @@ class Server extends events {
                 this.destroy(controller);
                 this.emit('timeout');
             }, 5 * 60 * 1000), keys = ['send', 'pipe'];
-            for (let i in keys) {
+            for (const i in keys) {
                 ((k) => {
                     const o = res[k].bind(res);
                     res[k] = (...arg) => {
-                        let result = o(...arg);
+                        const result = o(...arg);
                         this.destroy(controller);
                         clearTimeout(clear);
                         return result;
