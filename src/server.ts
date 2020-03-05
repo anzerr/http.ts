@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import events from 'events';
+import * as events from 'events';
 import * as http from 'http.server';
 import {Module} from 'inject.ts';
 import is from 'type.util';

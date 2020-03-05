@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import 'reflect-metadata';
-import events from 'events';
+import * as events from 'events';
 import Controller from './server/controller';
 declare class Server extends events.EventEmitter {
     static Controller: typeof Controller;

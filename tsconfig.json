@@ -13,8 +13,7 @@
 			"dom"
 		],
 		"outDir": "./dist",
-	    "baseUrl": "./",
-		"esModuleInterop": true
+	    "baseUrl": "./"
 	},
 	"include": [
 		"./src/*",
