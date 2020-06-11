@@ -72,14 +72,15 @@ class Server extends events.EventEmitter {
 		}
 	}
 
-	route(req: any, res: any): any {
+	route(req: any, res: any, cid: string): any {
 		const {m, map} = this.find(req);
 		if (m) {
 			const controller = this.instantiate(map.class, [{
 				match: m,
 				param: map.param,
 				req: req,
-				res: res
+				res: res,
+				cid: cid
 			}]);
 			controller.meta = {
 				method: controller[map.action],
@@ -94,10 +95,10 @@ class Server extends events.EventEmitter {
 					if (!done) {
 						res.status(504).send('request timeout');
 						this.destroy(controller);
-						this.emit('timeout');
+						this.emit('timeout', {cid: cid, method: req.method(), url: req.url()});
 						resolve((done = true, id = 0));
 					} else {
-						this.emit('log', ['double_call', {method: req.method(), url: req.url(), type: `0-${id}`}]);
+						this.emit('log', ['double_call', {cid: cid, method: req.method(), url: req.url(), type: `0-${id}`}]);
 					}
 				}, this.timeout);
 				const keys = ['send', 'pipe'];
@@ -112,7 +113,7 @@ class Server extends events.EventEmitter {
 								resolve((done = true, id = 1));
 								return result;
 							}
-							this.emit('log', ['double_call', {data: arg, method: req.method(), url: req.url(), type: `1-${id}`}]);
+							this.emit('log', ['double_call', {cid: cid, method: req.method(), url: req.url(), type: `1-${id}`}]);
 						};
 					})(keys[i]);
 				}
@@ -142,6 +143,7 @@ class Server extends events.EventEmitter {
 			}).then(() => {
 				const end = process.hrtime(start);
 				this.emit('log', ['delay', {
+					cid: cid,
 					method: req.method(),
 					url: req.url(),
 					ms: ((end[0] * 1e9 + end[1]) / 1e6).toFixed(2)
@@ -154,11 +156,12 @@ class Server extends events.EventEmitter {
 		this.s = new http.Server(this.port);
 		this.alive = false;
 		return this.s.create((req, res) => {
-			this.emit('log', ['request', `${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
+			const cid = Math.random().toString(36).substr(2);
+			this.emit('log', ['request', `${cid} - ${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
 			if (intercept && intercept(req, res)) {
 				return;
 			}
-			if (!this.route(req, res)) {
+			if (!this.route(req, res, cid)) {
 				return res.status((req.url() === '/') ? 200 : 404).send('');
 			}
 		}).then(() => {

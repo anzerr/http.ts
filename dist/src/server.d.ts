@@ -15,7 +15,7 @@ declare class Server extends events.EventEmitter {
     find(req: any): any | void;
     midware(map: any, controller: any): Promise<any | void>;
     destroy(controller: any): void;
-    route(req: any, res: any): any;
+    route(req: any, res: any, cid: string): any;
     start(intercept?: (req: any, res: any) => boolean): Promise<Server>;
     close(): Promise<void>;
     withController(list: any[]): Server;

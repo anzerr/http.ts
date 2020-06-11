@@ -2,6 +2,7 @@ export default class Controller {
     private _res;
     private _req;
     private _param;
+    private _cid;
     meta: {
         method: any;
         action: any;
@@ -10,6 +11,7 @@ export default class Controller {
     query: {
         [key: string]: any;
     };
+    get cid(): string;
     get response(): any;
     get request(): any;
     get param(): any;

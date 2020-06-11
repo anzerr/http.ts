@@ -7,9 +7,14 @@ export default class Controller {
 	private _res: any;
 	private _req: any;
 	private _param: any;
+	private _cid: string;
 
-	meta: {method: any, action: any, name: any};
+	meta: {method: any; action: any; name: any};
 	query: {[key: string]: any};
+
+	get cid(): string {
+		return this._cid;
+	}
 
 	get response(): any {
 		return this._res;
@@ -37,6 +42,7 @@ export default class Controller {
 			this._param = param;
 			this._req = options.req;
 			this._res = options.res;
+			this._cid = options.cid;
 			if (this._req && is.function(this._req.query)) {
 				this.query = querystring.parse(this._req.query() || '');
 			}
