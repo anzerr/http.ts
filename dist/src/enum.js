@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.METHOD = exports.METADATA = void 0;
 exports.METADATA = {
     PATH: 'http.path',
     METHOD: 'http.method',

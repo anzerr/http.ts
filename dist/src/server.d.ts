@@ -9,6 +9,7 @@ declare class Server extends events.EventEmitter {
     private map;
     private module;
     alive: boolean;
+    timeout: number;
     constructor(port?: number);
     instantiate(target: Record<string, any>, options: any[]): any;
     find(req: any): any | void;

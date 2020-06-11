@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Priority = exports.Midware = exports.All = exports.Patch = exports.Options = exports.Put = exports.Delete = exports.Post = exports.Get = void 0;
 require("reflect-metadata");
 const enum_1 = require("./enum");
 /* tslint:disable:variable-name */

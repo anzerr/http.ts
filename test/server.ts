@@ -58,10 +58,29 @@ class Test extends Server.Controller {
 		return `cat_${this.query.name || ''}`;
 	}
 
+	@Get('error')
+	error(): any {
+		return Promise.reject(new Error('shit broke'));
+	}
+
+	@Get('timeout')
+	timeout(): any {
+		setTimeout(() => {
+			this.status(200).json(['test']);
+		}, 10 * 1000);
+	}
+
 }
 
 export const create = (port = 3000): any => {
 	const server = new Server(port)
 		.withController([Test]);
+	server.timeout = 5 * 1000;
+	server.on('error', (err) => {
+		console.log('http error', err);
+	});
+	server.on('log', (arg) => {
+		console.log('http log', arg);
+	});
 	return {server: server, logs:logs};
 };

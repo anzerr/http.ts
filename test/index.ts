@@ -9,7 +9,15 @@ const port = 3000 + Math.floor(Math.random() * 3000), count = 600 + Math.floor(M
 const {server, logs} = create(port);
 
 server.start().then(() => {
-	return util.hit(port, count);
+	return util.hit(port, count).then(async (res) => {
+		const a = await util.get(`http://localhost:${port}/test/error`);
+		assert.equal(a.status, 500);
+		assert.equal(a.data, 'Error: shit broke');
+		const b = await util.get(`http://localhost:${port}/test/timeout`);
+		assert.equal(b.status, 504);
+		assert.equal(b.data, 'request timeout');
+		return res;
+	});
 }).then((res) => {
 	for (const i in logs) {
 		assert.equal(logs[i][0], Number(i) + 1);
@@ -17,7 +25,7 @@ server.start().then(() => {
 	assert.equal(logs.length, count * 3);
 	assert.equal(server.module.instance.length, 1);
 	assert.equal(server.module.instance[0].tClass.count, logs.length);
-	assert.equal(server.map.get.length, 1);
+	assert.equal(server.map.get.length, 3);
 	assert.equal(server.map.post.length, 0);
 	assert.equal(server.port, port);
 	assert.equal(server.alive, true);

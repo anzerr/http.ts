@@ -17,6 +17,7 @@ class Server extends events.EventEmitter {
             this.map[enum_1.METHOD[i]] = [];
         }
         this.module = new inject_ts_1.Module([]);
+        this.timeout = 5 * 60 * 1000;
     }
     instantiate(target, options) {
         if (!type_util_1.default.array(options)) {
@@ -70,39 +71,65 @@ class Server extends events.EventEmitter {
                 name: controller.constructor.name,
                 action: map.action
             };
-            const clear = setTimeout(() => {
-                res.status(504).send('request timeout after 5mins');
-                this.destroy(controller);
-                this.emit('timeout');
-            }, 5 * 60 * 1000), keys = ['send', 'pipe'];
-            for (const i in keys) {
-                ((k) => {
-                    const o = res[k].bind(res);
-                    res[k] = (...arg) => {
-                        const result = o(...arg);
+            const start = process.hrtime();
+            return new Promise((resolve) => {
+                let done = false, id = -1;
+                const clear = setTimeout(() => {
+                    if (!done) {
+                        res.status(504).send('request timeout');
                         this.destroy(controller);
-                        clearTimeout(clear);
-                        return result;
-                    };
-                })(keys[i]);
-            }
-            this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
-            return this.midware(map, controller).then(() => {
-                if (!type_util_1.default.function(controller[map.action])) {
-                    throw new Error(`the action "${map.action}" on the controller is not a function it\'s "${typeof controller[map.action]}"`);
+                        this.emit('timeout');
+                        resolve((done = true, id = 0));
+                    }
+                    else {
+                        this.emit('log', ['double_call', { method: req.method(), url: req.url(), type: `0-${id}` }]);
+                    }
+                }, this.timeout);
+                const keys = ['send', 'pipe'];
+                for (const i in keys) {
+                    ((k) => {
+                        const o = res[k].bind(res);
+                        res[k] = (...arg) => {
+                            if (!done) {
+                                const result = o(...arg);
+                                this.destroy(controller);
+                                clearTimeout(clear);
+                                resolve((done = true, id = 1));
+                                return result;
+                            }
+                            this.emit('log', ['double_call', { data: arg, method: req.method(), url: req.url(), type: `1-${id}` }]);
+                        };
+                    })(keys[i]);
                 }
-                return controller[map.action]();
-            }).then((r) => {
-                if (res !== r && r) {
-                    return (type_util_1.default.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
-                }
-            }).catch((e) => {
-                if (e && e instanceof Error) {
+                this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
+                return this.midware(map, controller).then(() => {
+                    if (!type_util_1.default.function(controller[map.action])) {
+                        throw new Error(`the action "${map.action}" on the controller is not a function it\'s "${typeof controller[map.action]}"`);
+                    }
+                    return controller[map.action]();
+                }).then((r) => {
+                    if (res !== r && r) {
+                        return (type_util_1.default.object(r) && !Buffer.isBuffer(r)) ? res.json(r) : res.send(r);
+                    }
+                }).catch((e) => {
+                    if (e && e instanceof Error) {
+                        if (this.listenerCount('error')) {
+                            this.emit('error', e);
+                        }
+                        return res.status(500).send(e.toString());
+                    }
+                }).catch((e) => {
                     if (this.listenerCount('error')) {
                         this.emit('error', e);
                     }
-                    return res.status(500).send(e.toString());
-                }
+                });
+            }).then(() => {
+                const end = process.hrtime(start);
+                this.emit('log', ['delay', {
+                        method: req.method(),
+                        url: req.url(),
+                        ms: ((end[0] * 1e9 + end[1]) / 1e6).toFixed(2)
+                    }]);
             });
         }
     }
