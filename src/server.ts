@@ -18,6 +18,7 @@ class Server extends events.EventEmitter {
 	private module: Module;
 	public alive: boolean;
 	public timeout: number;
+	public logs: boolean;
 
 	constructor(port = 3050) {
 		super();
@@ -28,6 +29,14 @@ class Server extends events.EventEmitter {
 		}
 		this.module = new Module([]);
 		this.timeout = 5 * 60 * 1000;
+		this.logs = true;
+	}
+
+	emit(event: string, data?: any): any {
+		if (!this.logs && event === 'log') {
+			return null;
+		}
+		return super.emit(event, data);
 	}
 
 	instantiate(target: Record<string, any>, options: any[]): any {
@@ -119,6 +128,14 @@ class Server extends events.EventEmitter {
 				}
 
 				this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
+				res.on('end', (info) => {
+					this.emit('log', ['delay_total', {
+						cid: cid,
+						method: req.method(),
+						url: req.url(),
+						ms: info.ms
+					}]);
+				});
 				return this.midware(map, controller).then(() => {
 					if (!is.function(controller[map.action])) {
 						throw new Error(`the action "${map.action}" on the controller is not a function it\'s "${typeof controller[map.action]}"`);
@@ -146,7 +163,7 @@ class Server extends events.EventEmitter {
 					cid: cid,
 					method: req.method(),
 					url: req.url(),
-					ms: ((end[0] * 1e9 + end[1]) / 1e6).toFixed(2)
+					ms: ((end[0] * 1e9 + end[1]) / 1e6)
 				}]);
 			});
 		}
@@ -157,6 +174,7 @@ class Server extends events.EventEmitter {
 		this.alive = false;
 		return this.s.create((req, res) => {
 			const cid = Math.random().toString(36).substr(2);
+			res._cid = cid;
 			this.emit('log', ['request', `${cid} - ${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
 			if (intercept && intercept(req, res)) {
 				return;

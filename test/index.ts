@@ -8,6 +8,8 @@ const port = 3000 + Math.floor(Math.random() * 3000), count = 600 + Math.floor(M
 
 const {server, logs} = create(port);
 
+server.logs = process.argv[2] !== 'simple';
+
 server.start().then(() => {
 	return util.hit(port, count).then(async (res) => {
 		const a = await util.get(`http://localhost:${port}/test/error`);
@@ -22,6 +24,7 @@ server.start().then(() => {
 	for (const i in logs) {
 		assert.equal(logs[i][0], Number(i) + 1);
 	}
+	console.log(res);
 	assert.equal(logs.length, count * 3);
 	assert.equal(server.module.instance.length, 1);
 	assert.equal(server.module.instance[0].tClass.count, logs.length);

@@ -80,7 +80,9 @@ export const create = (port = 3000): any => {
 		console.log('http error', err);
 	});
 	server.on('log', (arg) => {
-		console.log('http log', arg);
+		if (arg[0] === 'request') {
+			console.log('http log', arg[1]);
+		}
 	});
-	return {server: server, logs:logs};
+	return {server: server, logs: logs};
 };

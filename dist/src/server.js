@@ -18,6 +18,13 @@ class Server extends events.EventEmitter {
         }
         this.module = new inject_ts_1.Module([]);
         this.timeout = 5 * 60 * 1000;
+        this.logs = true;
+    }
+    emit(event, data) {
+        if (!this.logs && event === 'log') {
+            return null;
+        }
+        return super.emit(event, data);
     }
     instantiate(target, options) {
         if (!type_util_1.default.array(options)) {
@@ -103,6 +110,14 @@ class Server extends events.EventEmitter {
                     })(keys[i]);
                 }
                 this.emit('log', ['mapped', `${controller.constructor.name} - ${map.action}`]);
+                res.on('end', (info) => {
+                    this.emit('log', ['delay_total', {
+                            cid: cid,
+                            method: req.method(),
+                            url: req.url(),
+                            ms: info.ms
+                        }]);
+                });
                 return this.midware(map, controller).then(() => {
                     if (!type_util_1.default.function(controller[map.action])) {
                         throw new Error(`the action "${map.action}" on the controller is not a function it\'s "${typeof controller[map.action]}"`);
@@ -130,7 +145,7 @@ class Server extends events.EventEmitter {
                         cid: cid,
                         method: req.method(),
                         url: req.url(),
-                        ms: ((end[0] * 1e9 + end[1]) / 1e6).toFixed(2)
+                        ms: ((end[0] * 1e9 + end[1]) / 1e6)
                     }]);
             });
         }
@@ -140,6 +155,7 @@ class Server extends events.EventEmitter {
         this.alive = false;
         return this.s.create((req, res) => {
             const cid = Math.random().toString(36).substr(2);
+            res._cid = cid;
             this.emit('log', ['request', `${cid} - ${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
             if (intercept && intercept(req, res)) {
                 return;

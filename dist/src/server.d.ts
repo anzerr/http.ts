@@ -10,7 +10,9 @@ declare class Server extends events.EventEmitter {
     private module;
     alive: boolean;
     timeout: number;
+    logs: boolean;
     constructor(port?: number);
+    emit(event: string, data?: any): any;
     instantiate(target: Record<string, any>, options: any[]): any;
     find(req: any): any | void;
     midware(map: any, controller: any): Promise<any | void>;
