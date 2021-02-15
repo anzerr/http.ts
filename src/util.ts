@@ -21,7 +21,7 @@ class Util {
 
 	pathToReg(...list: string[]): RegExp {
 		const u = this.pathJoin(...list);
-		return new RegExp(`^${u.replace(/:\w+/g, '([-_\\.\\w]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
+		return new RegExp(`^${u.replace(/:\w+/g, '([-_%\\.\\w]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
 	}
 
 	pathJoin(...list: string[]): string {

@@ -26,9 +26,11 @@ server.start().then(() => {
 	}
 	console.log(res);
 	assert.equal(logs.length, count * 3);
+	assert.equal(res.count, count);
+	assert.equal(res.error, 0);
 	assert.equal(server.module.instance.length, 1);
 	assert.equal(server.module.instance[0].tClass.count, logs.length);
-	assert.equal(server.map.get.length, 3);
+	assert.equal(server.map.get.length, 4);
 	assert.equal(server.map.post.length, 0);
 	assert.equal(server.port, port);
 	assert.equal(server.alive, true);

@@ -70,6 +70,14 @@ class Test extends Server.Controller {
 		}, 10 * 1000);
 	}
 
+	@Get('name/:name')
+	@Midware(mid.func1)
+	@Midware(mid.func2, 1, 2, 3)
+	@Midware(mid.func3)
+	getName(): any {
+		this.status(200).json([this.param, this.query]);
+	}
+
 }
 
 export const create = (port = 3000): any => {

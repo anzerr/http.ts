@@ -18,7 +18,7 @@ class Util {
     }
     pathToReg(...list) {
         const u = this.pathJoin(...list);
-        return new RegExp(`^${u.replace(/:\w+/g, '([-_\\.\\w]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
+        return new RegExp(`^${u.replace(/:\w+/g, '([-_%\\.\\w]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
     }
     pathJoin(...list) {
         let u = list.map((a) => a.replace(/[^-_\.\w:\/]+/g, ''))

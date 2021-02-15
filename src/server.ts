@@ -51,7 +51,12 @@ class Server extends events.EventEmitter {
 		for (const i in this.map[method]) {
 			const m = req.url().match(this.map[method][i].reg);
 			if (m) {
-				return {m: m, map: this.map[method][i]};
+				const matches = [];
+				for (let i = 0; i < m.length; i++) {
+					matches[i] = decodeURIComponent(m[i]);
+				}
+				console.log('find map', matches);
+				return {m: matches, map: this.map[method][i]};
 			}
 		}
 		return {m: null, map: null};
