@@ -55,7 +55,6 @@ class Server extends events.EventEmitter {
 				for (let i = 0; i < m.length; i++) {
 					matches[i] = decodeURIComponent(m[i]);
 				}
-				console.log('find map', matches);
 				return {m: matches, map: this.map[method][i]};
 			}
 		}
