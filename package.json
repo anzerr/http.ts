@@ -1,6 +1,6 @@
 {
 	"name": "http.ts",
-	"version": "1.0.41",
+	"version": "1.0.42",
 	"description": "Simple http server in ts",
 	"keywords": [
 		"decorators",
