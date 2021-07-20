@@ -2,6 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const querystring = require("querystring");
 const type_util_1 = require("type.util");
+const errorWrap = (self, cd) => {
+    try {
+        return cd();
+    }
+    catch (e) {
+        if (self._emit) {
+            e.cid = self._cid;
+            self._emit('error', e);
+        }
+    }
+};
 class Controller {
     constructor(options) {
         if (options) {
@@ -13,6 +24,7 @@ class Controller {
             this._req = options.req;
             this._res = options.res;
             this._cid = options.cid;
+            this._emit = options.emit;
             if (this._req && type_util_1.default.function(this._req.query)) {
                 this.query = querystring.parse(this._req.query() || '');
             }
@@ -31,28 +43,40 @@ class Controller {
         return this._param;
     }
     get headers() {
-        return this._req.headers();
+        return errorWrap(this, () => {
+            return this._req.headers();
+        });
     }
     data() {
-        if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
-            return this._req.data();
-        }
-        throw new Error('There\'s no data possible on this request');
+        return errorWrap(this, () => {
+            if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
+                return this._req.data();
+            }
+            throw new Error('There\'s no data possible on this request');
+        });
     }
     pipe(a) {
-        if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
-            return this._req.req().pipe(a);
-        }
-        throw new Error('There\'s no data possible on this request');
+        return errorWrap(this, () => {
+            if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
+                return this._req.req().pipe(a);
+            }
+            throw new Error('There\'s no data possible on this request');
+        });
     }
     status(...arg) {
-        return this._res.status(...arg);
+        return errorWrap(this, () => {
+            return this._res.status(...arg);
+        });
     }
     json(...arg) {
-        return this._res.json(...arg);
+        return errorWrap(this, () => {
+            return this._res.json(...arg);
+        });
     }
     send(...arg) {
-        return this._res.send(...arg);
+        return errorWrap(this, () => {
+            return this._res.send(...arg);
+        });
     }
 }
 exports.default = Controller;

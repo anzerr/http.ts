@@ -2,12 +2,24 @@
 import * as querystring from 'querystring';
 import is from 'type.util';
 
+const errorWrap = (self, cd) => {
+	try {
+		return cd();
+	} catch(e) {
+		if (self._emit) {
+			e.cid = self._cid;
+			self._emit('error', e);
+		}
+	}
+}
+
 export default class Controller {
 
 	private _res: any;
 	private _req: any;
 	private _param: any;
 	private _cid: string;
+	private _emit: (name: string, data: any) => void;
 
 	meta: {method: any; action: any; name: any};
 	query: {[key: string]: any};
@@ -29,7 +41,9 @@ export default class Controller {
 	}
 
 	get headers(): any {
-		return this._req.headers();
+		return errorWrap(this, () => {
+			return this._req.headers();
+		});
 	}
 
 	constructor(options?: any) {
@@ -43,6 +57,7 @@ export default class Controller {
 			this._req = options.req;
 			this._res = options.res;
 			this._cid = options.cid;
+			this._emit = options.emit;
 			if (this._req && is.function(this._req.query)) {
 				this.query = querystring.parse(this._req.query() || '');
 			}
@@ -50,29 +65,39 @@ export default class Controller {
 	}
 
 	data(): Promise<any> {
-		if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
-			return this._req.data();
-		}
-		throw new Error('There\'s no data possible on this request');
+		return errorWrap(this, () => {
+			if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
+				return this._req.data();
+			}
+			throw new Error('There\'s no data possible on this request');
+		});
 	}
 
 	pipe(a: any): any {
-		if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
-			return this._req.req().pipe(a);
-		}
-		throw new Error('There\'s no data possible on this request');
+		return errorWrap(this, () => {
+			if (this._req.method().toLowerCase().match(/^(post|delete|put|patch)$/)) {
+				return this._req.req().pipe(a);
+			}
+			throw new Error('There\'s no data possible on this request');
+		});
 	}
 
 	status(...arg): any {
-		return this._res.status(...arg);
+		return errorWrap(this, () => {
+			return this._res.status(...arg);
+		});
 	}
 
 	json(...arg): any {
-		return this._res.json(...arg);
+		return errorWrap(this, () => {
+			return this._res.json(...arg);
+		});
 	}
 
 	send(...arg): any {
-		return this._res.send(...arg);
+		return errorWrap(this, () => {
+			return this._res.send(...arg);
+		});
 	}
 
 }

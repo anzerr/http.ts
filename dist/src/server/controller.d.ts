@@ -3,6 +3,7 @@ export default class Controller {
     private _req;
     private _param;
     private _cid;
+    private _emit;
     meta: {
         method: any;
         action: any;

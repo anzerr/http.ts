@@ -81,7 +81,9 @@ class Server extends events.EventEmitter {
 
 	destroy(controller) {
 		for (const i in controller) {
-			controller[i] = null;
+			if (i !== '_emit' && i !== '_cid') {
+				controller[i] = null;
+			}
 		}
 	}
 
@@ -93,7 +95,8 @@ class Server extends events.EventEmitter {
 				param: map.param,
 				req: req,
 				res: res,
-				cid: cid
+				cid: cid,
+				emit: (a, b) => this.emit(a, b)
 			}]);
 			controller.meta = {
 				method: controller[map.action],
@@ -152,12 +155,14 @@ class Server extends events.EventEmitter {
 				}).catch((e) => {
 					if (e && e instanceof Error) {
 						if (this.listenerCount('error')) {
+							(e as any).cid = cid;
 							this.emit('error', e);
 						}
 						return res.status(500).send(e.toString());
 					}
 				}).catch((e) => {
 					if (this.listenerCount('error')) {
+						e.cid = cid;
 						this.emit('error', e);
 					}
 				});
