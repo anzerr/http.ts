@@ -11,14 +11,21 @@ const createRequestMap = (method, path) => {
         return descriptor;
     };
 };
-exports.Get = (path) => createRequestMap(enum_1.METHOD.GET, path);
-exports.Post = (path) => createRequestMap(enum_1.METHOD.POST, path);
-exports.Delete = (path) => createRequestMap(enum_1.METHOD.DELETE, path);
-exports.Put = (path) => createRequestMap(enum_1.METHOD.PUT, path);
-exports.Options = (path) => createRequestMap(enum_1.METHOD.OPTIONS, path);
-exports.Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
-exports.All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
-exports.Midware = (func, ...arg) => {
+const Get = (path) => createRequestMap(enum_1.METHOD.GET, path);
+exports.Get = Get;
+const Post = (path) => createRequestMap(enum_1.METHOD.POST, path);
+exports.Post = Post;
+const Delete = (path) => createRequestMap(enum_1.METHOD.DELETE, path);
+exports.Delete = Delete;
+const Put = (path) => createRequestMap(enum_1.METHOD.PUT, path);
+exports.Put = Put;
+const Options = (path) => createRequestMap(enum_1.METHOD.OPTIONS, path);
+exports.Options = Options;
+const Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
+exports.Patch = Patch;
+const All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
+exports.All = All;
+const Midware = (func, ...arg) => {
     return (target, propertyKey, descriptor) => {
         const a = Reflect.getMetadata(enum_1.METADATA.MIDWARE, descriptor.value) || [];
         a.push({ func: func, arg: arg });
@@ -26,10 +33,12 @@ exports.Midware = (func, ...arg) => {
         return descriptor;
     };
 };
-exports.Priority = (n) => {
+exports.Midware = Midware;
+const Priority = (n) => {
     return (target, propertyKey, descriptor) => {
         Reflect.defineMetadata(enum_1.METADATA.PRIORITY, n || 5, descriptor.value);
         return descriptor;
     };
 };
+exports.Priority = Priority;
 //# sourceMappingURL=request.js.map

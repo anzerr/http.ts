@@ -22,7 +22,7 @@ let Log = class Log {
     }
 };
 Log = __decorate([
-    inject_ts_1.Injectable(),
+    (0, inject_ts_1.Injectable)(),
     __metadata("design:paramtypes", [])
 ], Log);
 class Mid extends index_1.Server.Controller {
@@ -74,58 +74,58 @@ let Test = class Test extends index_1.Server.Controller {
     }
 };
 __decorate([
-    inject_ts_1.Inject(Log),
+    (0, inject_ts_1.Inject)(Log),
     __metadata("design:type", Log)
 ], Test.prototype, "logger", void 0);
 __decorate([
-    index_1.Get(),
-    index_1.Midware(mid.func1),
-    index_1.Midware(mid.func2, 1, 2, 3),
-    index_1.Midware(mid.func3),
+    (0, index_1.Get)(),
+    (0, index_1.Midware)(mid.func1),
+    (0, index_1.Midware)(mid.func2, 1, 2, 3),
+    (0, index_1.Midware)(mid.func3),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test.prototype, "list", null);
 __decorate([
-    index_1.Post(),
+    (0, index_1.Post)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test.prototype, "create", null);
 __decorate([
-    index_1.Get('error'),
-    index_1.Priority(10),
+    (0, index_1.Get)('error'),
+    (0, index_1.Priority)(10),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], Test.prototype, "error", null);
 __decorate([
-    index_1.Get(':id'),
+    (0, index_1.Get)(':id'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test.prototype, "getUser", null);
 __decorate([
-    index_1.Get('overload'),
-    index_1.Priority(10),
+    (0, index_1.Get)('overload'),
+    (0, index_1.Priority)(10),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test.prototype, "othererror", null);
 __decorate([
-    index_1.Get(':id/json'),
+    (0, index_1.Get)(':id/json'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test.prototype, "getFriendsJson", null);
 __decorate([
-    index_1.Get(':id/friends'),
+    (0, index_1.Get)(':id/friends'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test.prototype, "getFriends", null);
 Test = __decorate([
-    index_1.Controller('user')
+    (0, index_1.Controller)('user')
 ], Test);
 let Test1 = class Test1 extends Test {
     getTime() {
@@ -136,17 +136,17 @@ let Test1 = class Test1 extends Test {
     }
 };
 __decorate([
-    inject_ts_1.Inject(Log),
+    (0, inject_ts_1.Inject)(Log),
     __metadata("design:type", Log)
 ], Test1.prototype, "logger", void 0);
 __decorate([
-    index_1.Get(':id/time'),
+    (0, index_1.Get)(':id/time'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Object)
 ], Test1.prototype, "getTime", null);
 Test1 = __decorate([
-    index_1.Controller('other')
+    (0, index_1.Controller)('other')
 ], Test1);
 const server = new index_1.Server(3000)
     .withController([Test, Test1]);
