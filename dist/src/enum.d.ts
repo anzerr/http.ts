@@ -11,5 +11,6 @@ export declare const METHOD: {
     PUT: string;
     OPTIONS: string;
     PATCH: string;
+    HEAD: string;
     ALL: string;
 };

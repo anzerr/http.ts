@@ -1,7 +1,5 @@
-declare class Util {
-    getAllMethodNames(prototype: any): any[];
-    pathToReg(...list: string[]): RegExp;
-    pathJoin(...list: string[]): string;
+export declare class Util {
+    static getAllMethodNames(prototype: any): any[];
+    static pathToReg(...list: string[]): RegExp;
+    static pathJoin(...list: string[]): string;
 }
-declare const _default: Util;
-export default _default;

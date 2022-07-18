@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Priority = exports.Midware = exports.All = exports.Patch = exports.Options = exports.Put = exports.Delete = exports.Post = exports.Get = void 0;
+exports.Priority = exports.Midware = exports.All = exports.Head = exports.Patch = exports.Options = exports.Put = exports.Delete = exports.Post = exports.Get = void 0;
 require("reflect-metadata");
 const enum_1 = require("./enum");
 /* tslint:disable:variable-name */
@@ -23,6 +23,8 @@ const Options = (path) => createRequestMap(enum_1.METHOD.OPTIONS, path);
 exports.Options = Options;
 const Patch = (path) => createRequestMap(enum_1.METHOD.PATCH, path);
 exports.Patch = Patch;
+const Head = (path) => createRequestMap(enum_1.METHOD.HEAD, path);
+exports.Head = Head;
 const All = (path) => createRequestMap(enum_1.METHOD.ALL, path);
 exports.All = All;
 const Midware = (func, ...arg) => {

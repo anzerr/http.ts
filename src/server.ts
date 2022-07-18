@@ -5,7 +5,7 @@ import * as http from 'http.server';
 import {Module} from 'inject.ts';
 import is from 'type.util';
 import {METADATA, METHOD} from './enum';
-import util from './util';
+import {Util} from './util';
 import Controller from './server/controller';
 
 class Server extends events.EventEmitter {
@@ -215,7 +215,7 @@ class Server extends events.EventEmitter {
 			const base = Reflect.getMetadata(METADATA.PATH, list[i]);
 			if (is.defined(base)) {
 				const instance = new list[i]({}),
-					methods = util.getAllMethodNames(Object.getPrototypeOf(instance));
+					methods = Util.getAllMethodNames(Object.getPrototypeOf(instance));
 				for (const x in methods) {
 					const url = Reflect.getMetadata(METADATA.PATH, instance[methods[x]]),
 						method = Reflect.getMetadata(METADATA.METHOD, instance[methods[x]]),
@@ -227,8 +227,8 @@ class Server extends events.EventEmitter {
 							instance: instance,
 							priority: priority || 5,
 							midware: (midware || []).reverse(),
-							reg: util.pathToReg(base, url),
-							path: util.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
+							reg: Util.pathToReg(base, url),
+							path: Util.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
 							param: (url.match(/:\w+/g) || []).map((a) => a.substr(1)),
 							class: list[i],
 							action: methods[x]

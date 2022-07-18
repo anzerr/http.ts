@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Util = void 0;
 const type_util_1 = require("type.util");
 class Util {
-    getAllMethodNames(prototype) {
+    static getAllMethodNames(prototype) {
         let out = [];
         do {
             out = out.concat(Object.getOwnPropertyNames(prototype).filter((prop) => {
@@ -16,11 +17,11 @@ class Util {
         } while ((prototype = Reflect.getPrototypeOf(prototype)) && prototype !== Object.prototype);
         return out;
     }
-    pathToReg(...list) {
-        const u = this.pathJoin(...list);
-        return new RegExp(`^${u.replace(/:\w+/g, '([-_%\\.\\w]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
+    static pathToReg(...list) {
+        const u = Util.pathJoin(...list);
+        return new RegExp(`^${u.replace(/:\w+/g, '([-_%\\.\\wÀ-ÖØ-öø-ÿ]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
     }
-    pathJoin(...list) {
+    static pathJoin(...list) {
         let u = list.map((a) => a.replace(/[^-_\.\w:\/]+/g, ''))
             .filter((a) => a && a !== '/')
             .join('/');
@@ -33,5 +34,5 @@ class Util {
         return u;
     }
 }
-exports.default = (new Util());
+exports.Util = Util;
 //# sourceMappingURL=util.js.map

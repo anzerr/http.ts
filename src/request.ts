@@ -17,6 +17,7 @@ export const Delete = (path?: string | string[]): any => createRequestMap(METHOD
 export const Put = (path?: string | string[]): any => createRequestMap(METHOD.PUT, path);
 export const Options = (path?: string | string[]): any => createRequestMap(METHOD.OPTIONS, path);
 export const Patch = (path?: string | string[]): any => createRequestMap(METHOD.PATCH, path);
+export const Head = (path?: string | string[]): any => createRequestMap(METHOD.HEAD, path);
 export const All = (path?: string | string[]): any => createRequestMap(METHOD.ALL, path);
 
 export const Midware = (func: (...args: any[]) => any, ...arg) => {

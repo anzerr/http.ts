@@ -1,7 +1,7 @@
 
 import 'reflect-metadata';
 import {create} from './server';
-import util from './util';
+import {Util} from './util';
 import * as assert from 'assert';
 
 const port = 3000 + Math.floor(Math.random() * 3000), count = 600 + Math.floor(Math.random() * 200);
@@ -11,13 +11,16 @@ const {server, logs} = create(port);
 server.logs = process.argv[2] !== 'simple';
 
 server.start().then(() => {
-	return util.hit(port, count).then(async (res) => {
-		const a = await util.get(`http://localhost:${port}/test/error`);
+	return Util.hit(port, count).then(async (res) => {
+		const a = await Util.get(`http://localhost:${port}/test/error`);
 		assert.equal(a.status, 500);
 		assert.equal(a.data, 'Error: shit broke');
-		const b = await util.get(`http://localhost:${port}/test/timeout`);
+		const b = await Util.get(`http://localhost:${port}/test/timeout`);
 		assert.equal(b.status, 504);
 		assert.equal(b.data, 'request timeout');
+		const c = await Util.head(`http://localhost:${port}/test`);
+		assert.equal(c.status, 200);
+		assert.equal(c.headers.test, 'test_1');
 		return res;
 	});
 }).then((res) => {

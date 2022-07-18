@@ -14,6 +14,7 @@ exports.METHOD = {
     PUT: 'put',
     OPTIONS: 'options',
     PATCH: 'patch',
+    HEAD: 'head',
     ALL: 'all'
 };
 //# sourceMappingURL=enum.js.map

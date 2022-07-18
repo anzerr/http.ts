@@ -78,6 +78,11 @@ class Controller {
             return this._res.send(...arg);
         });
     }
+    header(...arg) {
+        return errorWrap(this, () => {
+            return this._res.set(...arg);
+        });
+    }
 }
 exports.default = Controller;
 //# sourceMappingURL=controller.js.map

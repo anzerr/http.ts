@@ -100,4 +100,10 @@ export default class Controller {
 		});
 	}
 
+	header(...arg): any {
+		return errorWrap(this, () => {
+			return this._res.set(...arg);
+		});
+	}
+
 }

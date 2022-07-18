@@ -5,6 +5,7 @@ export declare const Delete: (path?: string | string[]) => any;
 export declare const Put: (path?: string | string[]) => any;
 export declare const Options: (path?: string | string[]) => any;
 export declare const Patch: (path?: string | string[]) => any;
+export declare const Head: (path?: string | string[]) => any;
 export declare const All: (path?: string | string[]) => any;
 export declare const Midware: (func: (...args: any[]) => any, ...arg: any[]) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 export declare const Priority: (n: number) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;

@@ -1,12 +1,29 @@
 
 import * as assert from 'assert';
 import * as http from 'http';
+import * as url from 'url';
 
-class Util {
+export class Util {
 
-	get(url: string): any {
+	static get(baseUrl: string): any {
+		return Util.request(baseUrl, {method: 'GET'});
+	}
+
+	static head(baseUrl: string): any {
+		return Util.request(baseUrl, {method: 'HEAD'});
+	}
+
+	static request(baseUrl: string, options: any): any {
+		const out = url.parse(baseUrl);
+		options.host = out.hostname;
+		options.port = Number(out.port || 80);
+		options.path = out.pathname.replace(/\/{2,}/g, '/');
+		if (out.query) {
+			options.path += '?' + out.query;
+		}
+		options.headers = {};
 		return new Promise((resolve, reject) => {
-			http.get(url, (res) => {
+			const req = http.request(options, (res) => {
 				const data = [];
 				res.on('data', (chunk) => data.push(chunk));
 				res.on('error', (err) => {
@@ -22,15 +39,16 @@ class Util {
 			}).on('error', (err) => {
 				reject(err);
 			});
+			req.end();
 		});
 	}
 
-	hit(port: number, count: number): Promise<any> {
+	static hit(port: number, count: number): Promise<any> {
 		const wait = [], start = process.hrtime();
 		let error = 0;
 		for (let i = 0; i < count; i++) {
 			((n) => {
-				wait.push(this.get(`http://localhost:${port}/test/name/test cât.png?name=${n}`).then((res) => {
+				wait.push(Util.get(`http://localhost:${port}/test/name/test cât.png?name=${n}`).then((res) => {
 					try {
 						assert.equal(res.status, 200);
 						assert.equal(res.headers['content-length'], res.data.length);
@@ -57,5 +75,3 @@ class Util {
 
 }
 
-const util = new Util();
-export default util;

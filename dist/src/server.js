@@ -193,7 +193,7 @@ class Server extends events.EventEmitter {
         for (const i in list) {
             const base = Reflect.getMetadata(enum_1.METADATA.PATH, list[i]);
             if (type_util_1.default.defined(base)) {
-                const instance = new list[i]({}), methods = util_1.default.getAllMethodNames(Object.getPrototypeOf(instance));
+                const instance = new list[i]({}), methods = util_1.Util.getAllMethodNames(Object.getPrototypeOf(instance));
                 for (const x in methods) {
                     const url = Reflect.getMetadata(enum_1.METADATA.PATH, instance[methods[x]]), method = Reflect.getMetadata(enum_1.METADATA.METHOD, instance[methods[x]]), priority = Reflect.getMetadata(enum_1.METADATA.PRIORITY, instance[methods[x]]), midware = Reflect.getMetadata(enum_1.METADATA.MIDWARE, instance[methods[x]]);
                     if (type_util_1.default.defined(url) && type_util_1.default.defined(method)) {
@@ -201,8 +201,8 @@ class Server extends events.EventEmitter {
                             instance: instance,
                             priority: priority || 5,
                             midware: (midware || []).reverse(),
-                            reg: util_1.default.pathToReg(base, url),
-                            path: util_1.default.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
+                            reg: util_1.Util.pathToReg(base, url),
+                            path: util_1.Util.pathJoin(base, url).replace(/:(\w+)/g, '{$1}'),
                             param: (url.match(/:\w+/g) || []).map((a) => a.substr(1)),
                             class: list[i],
                             action: methods[x]

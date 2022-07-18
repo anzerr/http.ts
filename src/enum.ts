@@ -13,5 +13,6 @@ export const METHOD = {
 	PUT: 'put',
 	OPTIONS: 'options',
 	PATCH: 'patch',
+	HEAD: 'head',
 	ALL: 'all'
 };

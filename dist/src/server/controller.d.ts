@@ -23,4 +23,5 @@ export default class Controller {
     status(...arg: any[]): any;
     json(...arg: any[]): any;
     send(...arg: any[]): any;
+    header(...arg: any[]): any;
 }

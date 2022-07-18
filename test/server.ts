@@ -1,6 +1,6 @@
 
 import 'reflect-metadata';
-import {Server, Controller, Get, Midware} from '../index';
+import {Server, Controller, Get, Head, Midware} from '../index';
 import {Injectable, Inject} from 'inject.ts';
 
 const logs = [];
@@ -56,6 +56,15 @@ class Test extends Server.Controller {
 	@Midware(mid.func3)
 	list(): any {
 		return `cat_${this.query.name || ''}`;
+	}
+
+	@Head()
+	headList(): any {
+		console.log('here');
+		this.header({
+			test: 'test_1'
+		});
+		return {};
 	}
 
 	@Get('error')

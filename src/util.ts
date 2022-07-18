@@ -1,9 +1,9 @@
 
 import is from 'type.util';
 
-class Util {
+export class Util {
 
-	getAllMethodNames(prototype: any): any[] {
+	static getAllMethodNames(prototype: any): any[] {
 		let out = [];
 		do {
 			out = out.concat(Object.getOwnPropertyNames(prototype).filter((prop) => {
@@ -19,12 +19,12 @@ class Util {
 		return out;
 	}
 
-	pathToReg(...list: string[]): RegExp {
-		const u = this.pathJoin(...list);
-		return new RegExp(`^${u.replace(/:\w+/g, '([-_%\\.\\w]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
+	static pathToReg(...list: string[]): RegExp {
+		const u = Util.pathJoin(...list);
+		return new RegExp(`^${u.replace(/:\w+/g, '([-_%\\.\\wÀ-ÖØ-öø-ÿ]+)').replace(/[\/\.]/g, '\\$&')}\\/?$`);
 	}
 
-	pathJoin(...list: string[]): string {
+	static pathJoin(...list: string[]): string {
 		let u = list.map((a) => a.replace(/[^-_\.\w:\/]+/g, ''))
 			.filter((a) => a && a !== '/')
 			.join('/');
@@ -38,5 +38,3 @@ class Util {
 	}
 
 }
-
-export default (new Util());
