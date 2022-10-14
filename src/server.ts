@@ -138,6 +138,8 @@ class Server extends events.EventEmitter {
 				res.on('end', (info) => {
 					this.emit('log', ['delay_total', {
 						cid: cid,
+						status: res._status,
+						header: res._head,
 						method: req.method(),
 						url: req.url(),
 						ms: info.ms
@@ -170,6 +172,8 @@ class Server extends events.EventEmitter {
 				const end = process.hrtime(start);
 				this.emit('log', ['delay', {
 					cid: cid,
+					status: res._status,
+					header: res._head,
 					method: req.method(),
 					url: req.url(),
 					ms: ((end[0] * 1e9 + end[1]) / 1e6)

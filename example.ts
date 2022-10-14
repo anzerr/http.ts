@@ -103,9 +103,6 @@ class Test extends Server.Controller {
 @Controller('other')
 class Test1 extends Test {
 
-	@Inject(Log)
-	logger: Log;
-
 	@Get(':id/time')
 	getTime(): any {
 		this.logger.info('getTime');
@@ -120,8 +117,7 @@ const server = new Server(3000)
 	.withController([Test, Test1]);
 
 server.on('log', (arg) => console.log(...arg));
-// get throw error from controller
-/* server.on('error', (arg) => {
-	console.log(arg);
-});*/
+server.on('error', (err) => {
+	console.log('http error', err);
+});
 server.start().then(() => console.log('started'));
