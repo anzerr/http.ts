@@ -142,6 +142,7 @@ class Server extends events.EventEmitter {
 						header: res._head,
 						method: req.method(),
 						url: req.url(),
+						path: map.path,
 						ms: info.ms
 					}]);
 				});
@@ -176,6 +177,7 @@ class Server extends events.EventEmitter {
 					header: res._head,
 					method: req.method(),
 					url: req.url(),
+					path: map.path,
 					ms: ((end[0] * 1e9 + end[1]) / 1e6)
 				}]);
 			});
