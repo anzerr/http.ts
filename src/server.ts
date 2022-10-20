@@ -102,7 +102,8 @@ class Server extends events.EventEmitter {
 			controller.meta = {
 				method: controller[map.action],
 				name: controller.constructor.name,
-				action: map.action
+				action: map.action,
+				path: map.path
 			};
 
 			const start = process.hrtime();
