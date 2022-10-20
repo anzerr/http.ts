@@ -87,8 +87,8 @@ class Server extends events.EventEmitter {
 		}
 	}
 
-	route(req: any, res: any, cid: string): any {
-		const {m, map} = this.find(req);
+	route(req: any, res: any, cid: string, pathFind?: any): any {
+		const {m, map} = pathFind || this.find(req);
 		if (m) {
 			req._path = map.path;
 			const controller = this.instantiate(map.class, [{
@@ -193,10 +193,17 @@ class Server extends events.EventEmitter {
 			const cid = Math.random().toString(36).substr(2);
 			res._cid = cid;
 			this.emit('log', ['request', `${cid} - ${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
-			if (intercept && intercept(req, res)) {
-				return;
+			let pathFind = null;
+			if (intercept && is.func(intercept)) {
+				pathFind = this.find(req);
+				if (pathFind.m) {
+					req._path = pathFind.map.path;
+				};
+				if (intercept(req, res)) {
+					return;
+				}
 			}
-			if (!this.route(req, res, cid)) {
+			if (!this.route(req, res, cid, pathFind)) {
 				return res.status((req.url() === '/') ? 200 : 404).send('');
 			}
 		}).then(() => {
