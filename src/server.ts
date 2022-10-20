@@ -90,6 +90,7 @@ class Server extends events.EventEmitter {
 	route(req: any, res: any, cid: string): any {
 		const {m, map} = this.find(req);
 		if (m) {
+			req._path = map.path;
 			const controller = this.instantiate(map.class, [{
 				match: m,
 				param: map.param,
