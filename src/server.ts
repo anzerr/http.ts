@@ -8,7 +8,13 @@ import {METADATA, METHOD} from './enum';
 import {Util} from './util';
 import Controller from './server/controller';
 
-class Server extends events.EventEmitter {
+export class AsyncIntercept {
+
+	constructor(public _cd: (res: any, req: any, cd: (stop?: boolean) => void) => void) {}
+
+}
+
+export class Server extends events.EventEmitter {
 
 	static Controller = Controller;
 
@@ -189,18 +195,25 @@ class Server extends events.EventEmitter {
 	start(intercept?: (req: any, res: any) => boolean): Promise<Server> {
 		this.s = new http.Server(this.port);
 		this.alive = false;
-		return this.s.create((req, res) => {
+		return this.s.create(async (req, res) => {
 			const cid = Math.random().toString(36).substr(2);
 			res._cid = cid;
 			this.emit('log', ['request', `${cid} - ${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
 			let pathFind = null;
-			if (intercept && is.func(intercept)) {
+			if (intercept && (is.func(intercept) || intercept instanceof AsyncIntercept)) {
 				pathFind = this.find(req);
 				if (pathFind.m) {
 					req._path = pathFind.map.path;
 				};
-				if (intercept(req, res)) {
-					return;
+				if (intercept instanceof AsyncIntercept) {
+					const stop = await new Promise<boolean>((resolve) => intercept._cd(res, req, resolve));
+					if (stop) {
+						return;
+					}
+				} else {
+					if (intercept(req, res)) {
+						return;
+					}
 				}
 			}
 			if (!this.route(req, res, cid, pathFind)) {
@@ -256,5 +269,3 @@ class Server extends events.EventEmitter {
 	}
 
 }
-
-export default Server;

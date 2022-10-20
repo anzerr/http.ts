@@ -1,8 +1,8 @@
 
 import 'reflect-metadata';
 
-import Server from './src/server';
+export * from './src/server';
 import Controller from './src/controller';
 
-export {Server, Controller};
+export {Controller};
 export * from './src/request';
