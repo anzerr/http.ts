@@ -192,7 +192,7 @@ export class Server extends events.EventEmitter {
 		}
 	}
 
-	start(intercept?: (req: any, res: any) => boolean): Promise<Server> {
+	start(intercept?: (req: any, res: any) => boolean | AsyncIntercept): Promise<Server> {
 		this.s = new http.Server(this.port);
 		this.alive = false;
 		return this.s.create(async (req, res) => {
