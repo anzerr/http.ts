@@ -10,7 +10,7 @@ import Controller from './server/controller';
 
 export class AsyncIntercept {
 
-	constructor(public _cd: (res: any, req: any, cd: (stop?: boolean) => void) => void) {}
+	constructor(public _cd: (req: any, res: any, cd: (stop?: boolean) => void) => void) {}
 
 }
 
@@ -206,7 +206,7 @@ export class Server extends events.EventEmitter {
 					req._path = pathFind.map.path;
 				};
 				if (intercept instanceof AsyncIntercept) {
-					const stop = await new Promise<boolean>((resolve) => intercept._cd(res, req, resolve));
+					const stop = await new Promise<boolean>((resolve) => intercept._cd(req, res, resolve));
 					if (stop) {
 						return;
 					}
