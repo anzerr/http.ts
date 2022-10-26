@@ -8,7 +8,13 @@ import {METADATA, METHOD} from './enum';
 import {Util} from './util';
 import Controller from './server/controller';
 
-class Server extends events.EventEmitter {
+export class AsyncIntercept {
+
+	constructor(public _cd: (req: any, res: any, cd: (stop?: boolean) => void) => void) {}
+
+}
+
+export class Server extends events.EventEmitter {
 
 	static Controller = Controller;
 
@@ -87,9 +93,10 @@ class Server extends events.EventEmitter {
 		}
 	}
 
-	route(req: any, res: any, cid: string): any {
-		const {m, map} = this.find(req);
+	route(req: any, res: any, cid: string, pathFind?: any): any {
+		const {m, map} = pathFind || this.find(req);
 		if (m) {
+			req._path = map.path;
 			const controller = this.instantiate(map.class, [{
 				match: m,
 				param: map.param,
@@ -101,7 +108,8 @@ class Server extends events.EventEmitter {
 			controller.meta = {
 				method: controller[map.action],
 				name: controller.constructor.name,
-				action: map.action
+				action: map.action,
+				path: map.path
 			};
 
 			const start = process.hrtime();
@@ -184,17 +192,31 @@ class Server extends events.EventEmitter {
 		}
 	}
 
-	start(intercept?: (req: any, res: any) => boolean): Promise<Server> {
+	start(intercept?: (req: any, res: any) => boolean | AsyncIntercept): Promise<Server> {
 		this.s = new http.Server(this.port);
 		this.alive = false;
-		return this.s.create((req, res) => {
+		return this.s.create(async (req, res) => {
 			const cid = Math.random().toString(36).substr(2);
 			res._cid = cid;
 			this.emit('log', ['request', `${cid} - ${req.method()} - ${req.origin()} - ${req.remote().ip} - ${req.url()}`]);
-			if (intercept && intercept(req, res)) {
-				return;
+			let pathFind = null;
+			if (intercept && (is.func(intercept) || intercept instanceof AsyncIntercept)) {
+				pathFind = this.find(req);
+				if (pathFind.m) {
+					req._path = pathFind.map.path;
+				};
+				if (intercept instanceof AsyncIntercept) {
+					const stop = await new Promise<boolean>((resolve) => intercept._cd(req, res, resolve));
+					if (stop) {
+						return;
+					}
+				} else {
+					if (intercept(req, res)) {
+						return;
+					}
+				}
 			}
-			if (!this.route(req, res, cid)) {
+			if (!this.route(req, res, cid, pathFind)) {
 				return res.status((req.url() === '/') ? 200 : 404).send('');
 			}
 		}).then(() => {
@@ -247,5 +269,3 @@ class Server extends events.EventEmitter {
 	}
 
 }
-
-export default Server;
